@@ -10,6 +10,14 @@ git clone https://git.uwaterloo.ca/<username>/watopoly.git
 cd watopoly
 ```
 
+If there is a permission error when trying to clone the repo try the following inside the ssh server:
+```
+ssh-keygen -t ed25519 -C "your_email@uwaterloo.ca"
+cat ~/.ssh/id_ed25519.pub (copy the entire output)
+```
+Paste the key into GitLab -> SSH Keys -> Add new key.
+Try cloning again, and it should work!
+
 ## Daily Workflow
 
 Inside your repository run the following:
