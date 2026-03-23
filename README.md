@@ -6,7 +6,7 @@
 ```
 ssh <watiamID>@linux.student.cs.uwaterloo.ca
 cd cs246/<repo_location> (e.g. cs246/w26/a5/)
-git clone https://git.uwaterloo.ca/<username>/watopoly.git
+git clone https://git.uwaterloo.ca/imairena/watopoly.git
 cd watopoly
 ```
 
