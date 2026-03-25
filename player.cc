@@ -2,8 +2,7 @@ export module player;
 
 import <string>;
 import <vector>;
-
-class Property; // forward declaration
+import property;
 
 export class Player {
     std::string name;
@@ -15,6 +14,7 @@ export class Player {
     int timsTurns;
     std::vector<Property*> properties;
     bool isBankrupt;
+    int lastRoll;
 
  public:
     // Constructor
@@ -53,6 +53,7 @@ export class Player {
     // Info
     std::string getName() const;
     char getToken() const;
+    int getLastRoll() const;
 
     // Assets display
     void assets() const;

@@ -58,4 +58,48 @@ void Property::unmortgage() {
 
 } // unmortgage
 
-void Property::landOn(player* p) {} // coming soon :)
+void Property::landOn(player* p) {
+  // if property is unowned, give choice to buy
+  if (owner == nullptr) {
+    cout << getName() << " is unowned.";
+    cout << " Would you like to buy it for $" << cost << "?";
+    cout << " (y/n)" << endl;
+    
+    char choice;
+    bool validChoice = false;
+    while (validChoice == false) {
+      cin >> choice;
+      if (!cin) {
+        cin.clear();
+        cin.ignore();
+      }
+
+      if (choice == 'y' || choice == 'Y') {
+        validChoice = true;
+        buyProperty(p);
+        return;
+
+      } else if (choice == 'n' || choice == 'N') {
+        validChoice = true;
+        return;
+      }
+
+      cout << "Invalid input. Please enter 'y' to buy or 'n' to not buy" << endl;
+    } // while
+  } // if
+  else if (owner == p) {
+    cout << "You already own " << getName() << "." << endl;
+  }
+  else if (mortgaged) {
+    cout << getName() << " is mortgaged by " << owner->getName() << ".";
+    cout << " No tuition is owed." << endl;
+  }
+  else { // Need to pay owner
+    int amountOwed = getFee(p);
+    p->pay(amountOwed);
+    owner->receive(amountOwed);
+
+    cout << owner->getName() << " owns this property. You owe $" << amountOwed;
+    cout << "." << endl;
+  }
+} // landOn

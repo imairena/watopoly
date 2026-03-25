@@ -1,7 +1,7 @@
 module player;
 
 import <iostream>;
-import property; // assuming that we will create a module for Property
+import property;
 using namespace std;
 
 // Constructor
@@ -20,7 +20,7 @@ void Player::move(int steps) {
     }
 }
 
-int PLayer::getPosition() const {
+int Player::getPosition() const {
     return position;
 }
 
@@ -43,7 +43,7 @@ void Player::addProperty(Property* p) {
 }
 
 void Player::removeProperty(Property* p) {
-    for (auto it = properties.begin; it != properties.end(); ++it) {
+    for (auto it = properties.begin(); it != properties.end(); ++it) {
         if (*it == p) {
 	    properties.erase(it);
 	    return;
@@ -51,7 +51,7 @@ void Player::removeProperty(Property* p) {
     }
 }
 
-const vector<Property*>& Player::getProperties() const {
+const std::vector<Property*>& Player::getProperties() const {
     return properties;
 }
 
@@ -92,7 +92,7 @@ void Player::useCup() {
 }
 
 int Player::getCups() const {
-    return; timsCups;
+    return timsCups;
 }
 
 // Bankruptcy
@@ -111,6 +111,10 @@ string Player::getName() const {
 
 char Player::getToken() const {
     return token;
+}
+
+int Player::getLastRoll() const {
+  return lastRoll;
 }
 
 // Assets
