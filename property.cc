@@ -1,7 +1,6 @@
 export module property;
 import <string>;
 import square;
-//export class Player;
 
 export class Property : public Square {
   Player* owner;
