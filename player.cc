@@ -2,8 +2,7 @@ export module player;
 
 import <string>;
 import <vector>;
-
-class Property; // forward declaration
+import property;
 
 export class Player {
     std::string name;

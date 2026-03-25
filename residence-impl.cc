@@ -1,6 +1,5 @@
 module residence;
-import player;
-using namespace std
+using namespace std;
 
 Residence::Residence(string name, int position, int cost)
   : Property(name, position, cost) {}
@@ -13,11 +12,10 @@ int Residence::getFee(Player* p) {
   // Loop through player's properties to count residences
   for (Property* prop : propOwner->getProperties()) {
     // Check if prop is a Residence
-    if (dynamic_cast<Residence*>(prop) != nullptr) {
-      residencesOwned++;
-    } // if
+    if (dynamic_cast<Residence*>(prop) != nullptr) { residencesOwned++; }
   } // loop
-
+  
+  // Calculate fee based on number of residences owned
   switch (residencesOwned) {
     case 1:
       return 25;

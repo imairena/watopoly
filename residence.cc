@@ -1,5 +1,6 @@
 export module residence;
 import <string>;
+import square;
 import property;
 
 export class Residence : public Property {

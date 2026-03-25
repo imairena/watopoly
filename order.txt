@@ -1,5 +1,6 @@
 tools.cc
 
+player.cc
 square.cc
 non_properties.cc
 property.cc
@@ -8,6 +9,7 @@ residence.cc
 academicbuilding.cc
 board.cc
 
+player-impl.cc
 square-impl.cc
 non_properties-impl.cc
 property-impl.cc

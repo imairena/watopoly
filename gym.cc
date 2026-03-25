@@ -1,5 +1,6 @@
 export module gym;
 import <string>;
+import square;
 import property;
 
 export class Gym : public Property {
