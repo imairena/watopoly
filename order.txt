@@ -3,9 +3,15 @@ tools.cc
 square.cc
 non_properties.cc
 property.cc
+gym.cc
+residence.cc
+academicbuilding.cc
 board.cc
 
 square-impl.cc
 non_properties-impl.cc
 property-impl.cc
+gym-impl.cc
+residence-impl.cc
+academicbuilding-impl.cc
 board-impl.cc

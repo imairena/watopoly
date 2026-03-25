@@ -9,7 +9,7 @@ export class Property : public Square {
 
   public:
   Property(std::string name, int position, int cost);
-  virtual int getTuition(Player* p) = 0;
+  virtual int getFee(Player* p) = 0;
   virtual ~Property() = default;
 
   void buyProperty(Player* p);
