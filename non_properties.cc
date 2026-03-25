@@ -1,7 +1,6 @@
 export module non_properties;
 import square;
 import <string>;
-//export class Player;
 
 export class CoopFee : public Square {
   CoopFee(std::string name, int position);
