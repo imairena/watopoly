@@ -113,6 +113,10 @@ char Player::getToken() const {
     return token;
 }
 
+int Player::getLastRoll() const {
+  return lastRoll;
+}
+
 // Assets
 void Player::assets() const {
     cout << "Player: " << name << endl;
