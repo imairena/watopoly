@@ -1,4 +1,6 @@
 square.cc
 square-impl.cc
-non-properties.cc
-non-properties-impl.cc
+non_properties.cc
+non_properties-impl.cc
+property.cc
+property-impl.cc
