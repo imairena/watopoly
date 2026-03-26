@@ -1,6 +1,8 @@
-module property;
+module playerSquareProperty;
+
 import <iostream>;
-import player;
+import <string>;
+
 using namespace std;
 
 Property::Property(string name, int position, int cost) :

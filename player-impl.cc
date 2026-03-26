@@ -1,7 +1,8 @@
-module player;
+module playerSquareProperty;
 
 import <iostream>;
-import property;
+import <string>;
+
 using namespace std;
 
 // Constructor

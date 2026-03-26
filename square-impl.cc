@@ -1,5 +1,7 @@
-module square;
+module playerSquareProperty;
+
 import <string>;
+
 using namespace std;
 
 Square::Square(string name, int position) :
