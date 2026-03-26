@@ -14,33 +14,34 @@ Tuition::Tuition(string name, int position) : Square(name, position) {}
 void Tuition::landOn(Player* p) {
   cout << "Choose payment method: (1) $300 (2) 10 percent of total worth" << endl;
   
-  int choice;
+  string input;
   bool validChoice = false;
 
-  while (validChoice == false) {
-    cin >> choice;
-    if (!cin) {
-      cin.clear();
-      cin.ignore();
-    } // if
-
-    if (choice == 1) {
+  while (validChoice == false && cin >> input) {
+    if (input == "assets" || input == "all") {
+      cout << "You cannot view assets at this moment." << endl;
+    }
+    else if (input == "1") {
       validChoice = true;
       p->pay(300);
       cout << p->getName() << " paid $300." << endl;
-      return;
-
-    } else if (choice == 2) {
+    } 
+    else if (input == "2") {
       validChoice = true;
       int totalWorth = p->getMoney();
+      // Calculate total worth of properties owned
+      for (Property* prop : p->getProperties()) {
+        totalWorth += prop->getTotalValue();
+      }
+
       int owingAmount = totalWorth / 10;
       p->pay(owingAmount);
-      cout << p->getName() << " Paid $" << owingAmount;
+      cout << p->getName() << " paid $" << owingAmount;
       cout << ". 10 percent of $" << totalWorth << "." << endl;
-      return;
-    } // if
-    
-    cout << "Invalid choice. Don't be greedy!" << endl; 
+    }
+    else {
+      cout << "Invalid choice. Please enter 1 or 2" << endl; 
+    }
   } // while
 } // Tuition::landOn
 
