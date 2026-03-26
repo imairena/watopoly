@@ -31,7 +31,7 @@ void Tuition::landOn(Player* p) {
       int totalWorth = p->getMoney();
       // Calculate total worth of properties owned
       for (Property* prop : p->getProperties()) {
-        totalWorth += prop->getTotalValue();
+        totalWorth += prop->getCost();
       }
 
       int owingAmount = totalWorth / 10;

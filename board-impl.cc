@@ -8,8 +8,7 @@ import <algorithm>;
 import <memory>;
 import <map>;
 
-import <square>;
-import <player>;
+import playerSquareProperty;
 
 using namespace std;
 
