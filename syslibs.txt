@@ -2,3 +2,6 @@ iostream
 vector
 memory
 string
+map
+sstream
+algorithm

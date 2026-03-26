@@ -60,7 +60,7 @@ void Property::unmortgage() {
 
 } // unmortgage
 
-void Property::landOn(player* p) {
+void Property::landOn(Player* p) {
   // if property is unowned, give choice to buy
   if (owner == nullptr) {
     cout << getName() << " is unowned.";

@@ -1,7 +1,6 @@
 export module residence;
 import <string>;
-import square;
-import property;
+import playerSquareProperty;
 
 export class Residence : public Property {
   public:

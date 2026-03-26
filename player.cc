@@ -1,8 +1,8 @@
-export module player;
+export module playerAndSquare;
 
 import <string>;
 import <vector>;
-import property;
+//import property;
 
 export class Player {
     std::string name;

@@ -6,7 +6,7 @@ import <vector>;
 
 
 // forward declaration
-class Player;
+export class Player;
 
 
 
@@ -69,6 +69,7 @@ export class Player {
     // Movement
     void move(int steps);
     int getPosition() const;
+    void setPosition(int pos);
 
     // Money
     void pay(int amount);
@@ -84,6 +85,7 @@ export class Player {
     void sendToTims();
     void leaveTims();
     bool getInTims() const;
+    void setInTims(bool inTims);
     int getTimsTurns() const;
     void incrementTimsTurns();
 

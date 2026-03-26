@@ -1,5 +1,5 @@
 export module non_properties;
-import square;
+import playerSquareProperty;
 import <string>;
 
 export class CoopFee : public Square {
