@@ -9,6 +9,10 @@ import <memory>;
 import <map>;
 
 import playerSquareProperty;
+import non_properties;
+import gym;
+import residence;
+import academicbuilding;
 
 using namespace std;
 
@@ -32,7 +36,8 @@ int Board::squareLocation(int position) {
 }
 
 // ctor
-Board::Board(istream& boardIn, istream& squaresIn) {
+Board::Board(istream& boardIn, istream& squaresIn,
+             std::istream& cardsIn) {
   // read board.txt (boardIn)
   // put in boardString
   // create Squares based on squares.txt
