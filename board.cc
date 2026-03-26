@@ -5,8 +5,8 @@ import <string>;
 import <vector>;
 import <memory>;
 
-import square;
-import player;
+import playerSquareProperty;
+import academicbuilding;
 
 
 

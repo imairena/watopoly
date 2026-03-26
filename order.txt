@@ -5,6 +5,7 @@ non_properties.cc
 gym.cc
 residence.cc
 academicbuilding.cc
+board.cc
 
 player-impl.cc
 square-impl.cc
@@ -13,3 +14,4 @@ non_properties-impl.cc
 gym-impl.cc
 residence-impl.cc
 academicbuilding-impl.cc
+board-impl.cc
