@@ -1,7 +1,7 @@
 module non_properties;
 import <string>;
 import <iostream>;
-import player;
+import playerSquareProperty;
 using namespace std;
 
 CoopFee::CoopFee(string name, int position) : Square(name, position) {}
@@ -32,7 +32,7 @@ void Tuition::landOn(Player* p) {
 
     } else if (choice == 2) {
       validChoice = true;
-      int totalWorth = p->assets();
+      int totalWorth = p->getMoney();
       int owingAmount = totalWorth / 10;
       p->pay(owingAmount);
       cout << p->getName() << " Paid $" << owingAmount;

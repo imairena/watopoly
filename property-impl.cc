@@ -1,6 +1,8 @@
-module property;
+module playerSquareProperty;
+
 import <iostream>;
-import player;
+import <string>;
+
 using namespace std;
 
 Property::Property(string name, int position, int cost) :
@@ -58,7 +60,7 @@ void Property::unmortgage() {
 
 } // unmortgage
 
-void Property::landOn(player* p) {
+void Property::landOn(Player* p) {
   // if property is unowned, give choice to buy
   if (owner == nullptr) {
     cout << getName() << " is unowned.";

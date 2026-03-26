@@ -1,4 +1,7 @@
 module gym;
+
+import playerSquareProperty;
+
 using namespace std;
 
 Gym::Gym(string name, int position, int cost) : Property(name, position, cost) {}

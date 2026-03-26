@@ -1,4 +1,7 @@
 module residence;
+
+import playerSquareProperty;
+
 using namespace std;
 
 Residence::Residence(string name, int position, int cost)
