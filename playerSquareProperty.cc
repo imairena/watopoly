@@ -43,7 +43,7 @@ export class Property : public Square {
   void landOn(Player* p) override;
 
   Player* getOwner() const;
-  int getCost() const;
+  virtual int getCost() const;
   bool isMortgaged() const;
 };
 
