@@ -1,0 +1,12 @@
+export module game;
+
+import <vector>;
+
+import playerSquareProperty;
+import board;
+
+
+
+export class Game {
+  
+};

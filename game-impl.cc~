@@ -1,0 +1,24 @@
+export module game;
+
+import <iostream>;
+import <vector>;
+
+import playerSquareProperty;
+import board;
+
+
+
+export class Game {
+  std::vector<Player> players;
+  Board board;
+  int currentPlayer = 0;
+  int totalCups = 0;
+  int maxCups = 4;
+public:
+  Game(int numPlayers);
+  void playTurn();
+  void nextPlayer();
+  void loadGame(istream& gameIn);
+  void saveGame(ostream& gameOut);
+  void all();
+};
