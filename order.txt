@@ -15,4 +15,5 @@ non_properties-impl.cc
 gym-impl.cc
 residence-impl.cc
 academicbuilding-impl.cc
+board-impl.cc
 game-impl.cc
