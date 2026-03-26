@@ -11,8 +11,9 @@ export class AcademicBuilding : public Property {
 public:
   AcademicBuilding
     (std::string name, int position, int cost,
-     int improvementCost, std::string monopolyBlock,
+     int improvementCost, std::string monopolyBlock, int blockSize,
      int tlvls[6]);
+
   int getFee(Player* p) override;
   void addImprovement();
   void removeImprovement();
