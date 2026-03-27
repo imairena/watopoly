@@ -15,6 +15,14 @@ export class Game {
   int currentPlayer = 0;
   int totalCups = 0;
   const int maxCups = 4;
+
+  // helper methods (private)
+  void handleRoll(Player& currPlayer, bool& hasRolled);
+  void handleBankrupt(Player& currPlayer);
+  void handleTrade(Player& currPlayer);
+  void handleMortgage(Player& currPlayer);
+  void handleUnmortgage(Player& currPlayer);
+  void handleImprove(Player& currPlayer);
   
 public:
   Game(std::istream& boardIn, std::istream& squaresIn,

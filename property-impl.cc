@@ -44,7 +44,7 @@ void Property::mortgage() {
 
   // No errors
   mortgaged = true;
-  int amount = cost / 2; // based on https://monopoly.fandom.com/wiki/Mortgage
+  int amount = cost / 2; 
   owner->receive(amount);
   cout << getName() << " was successfully mortgaged." << endl;
 
@@ -63,7 +63,7 @@ void Property::unmortgage() {
 
   // No errors
   mortgaged = false;
-  int amount = (cost / 2) * 1.10; // based on https://monopoly.fandom.com/wiki/Mortgage
+  int amount = (cost / 2) * 1.10; 
   owner->pay(amount);
   cout << getName() << " was successfully unmortgaged." << endl;
 
