@@ -7,9 +7,11 @@ import <string>;
 
 import playerSquareProperty;
 import board;
+import academicbuilding;
 import tools;
 
 using namespace std;
+
 
 
 Game::Game(istream& boardIn, istream& squaresIn, istream& cardsIn):

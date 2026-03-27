@@ -129,7 +129,7 @@ Board::Board(istream& boardIn, istream& squaresIn,
       squareString2 = "FEE";
     }
     
-    squares.push_back(squareptr);
+    squares.push_back(move(squareptr));
     boardString.replace(location, squareString1.length(), squareString1);
     boardString.replace(location + lineWidth, squareString2.length(), squareString2);
 
@@ -146,8 +146,8 @@ Board::Board(istream& boardIn, istream& squaresIn,
 
     // sort squares by position
     sort(squares.begin(), squares.end(),
-         [](const Square &s1, const Square &s2) {
-           return s1.getPosition() < s2.getPosition();
+         [](const std::unique_ptr<Square>& s1, const std::unique_ptr<Square>& s2) {
+           return s1->getPosition() < s2->getPosition();
          });
   }
 }
