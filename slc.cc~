@@ -1,0 +1,7 @@
+export module slc;
+
+import <string>;
+
+export class SLC{
+  
+};

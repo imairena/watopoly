@@ -1,0 +1,14 @@
+module slc;
+
+import <vector>;
+
+import cardsquare;
+import card;
+
+
+
+vector<Card>& SLC::getCards() {
+  return cards;
+}
+
+SLC::SLC(int position, vector<Card> cards): CardSquare{"SLC", position}, cards{cards} {}

@@ -5,6 +5,10 @@ non_properties.cc
 gym.cc
 residence.cc
 academicbuilding.cc
+card.cc
+card_types.cc
+cardsquare.cc
+slc.cc
 board.cc
 game.cc
 
@@ -15,5 +19,9 @@ non_properties-impl.cc
 gym-impl.cc
 residence-impl.cc
 academicbuilding-impl.cc
+card-impl.cc
+card_types-impl.cc
+cardsquare-impl.cc
+slc-impl.cc
 board-impl.cc
 game-impl.cc

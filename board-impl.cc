@@ -119,11 +119,19 @@ Board::Board(istream& boardIn, istream& squaresIn,
     boardString.replace(location, squareString1.length(), squareString1);
     boardString.replace(location + lineWidth, squareString2.length(), squareString2);
 
+    // monopolyBlockSize depends on other entries in data, so
+    // it must be set after initialization
     for (auto& squareptr : squares) {  // set blockSize of all academic buildings
       if (auto acBuild = dynamic_cast<AcademicBuilding*>(squareptr.get())) {
         acBuild->setBlockSize(monopolyBlockCounts[acBuild->getMonopolyBlock()]);
       }
     }
+
+    // sort squares by position
+    sort(squares.begin(), squares.end(),
+         [](const Square &s1, const Square &s2) {
+           return s1.getPosition() < s2.getPosition();
+         });
   }
 }
 
@@ -147,4 +155,8 @@ void Board::display(ostream& out = cout) {
     boardString.replace(playerPosition + 3 * lineWidth, 1, 1, playerToken);
   }
   out << boardString;  // no endl because boardString already ends with "\n"
+}
+
+Square& Board::getSquare(int i) {
+  return squares[i];
 }

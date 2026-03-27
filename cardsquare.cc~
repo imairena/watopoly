@@ -1,0 +1,15 @@
+export module cardsquare
+
+import <vector>;
+
+import playerSquareProperty;
+import card;
+
+
+
+export class CardSquare {
+protected:
+  virtual std::vector<Card>& getCards() = 0;
+public:
+  void landOn(Player* p) override;
+};

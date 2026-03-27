@@ -1,0 +1,12 @@
+export module card;
+
+import <string>;
+
+
+
+export class Card {
+  std::string cardText;
+  int cardVal;
+public:
+  virtual applyCard() = 0;
+};

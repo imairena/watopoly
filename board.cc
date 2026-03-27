@@ -25,5 +25,6 @@ export class Board {
 public:
   Board(std::istream& boardIn, std::istream& squaresIn,
         std::istream& cardsIn);
-    void display(std::ostream& out = std::cout);
+  void display(std::ostream& out = std::cout);
+  Square& getSquare(int i);
 };

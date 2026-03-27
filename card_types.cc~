@@ -1,0 +1,12 @@
+export module card_types;
+
+import <string>;
+
+import card;
+
+
+
+export class MoveCard: public Card {
+public:
+  
+};
