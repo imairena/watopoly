@@ -1,2 +1,9 @@
+# Object files
 *.o
+
+# Cache files
 gcm.cache/
+*.tmp
+
+# emacs backup files
+*~

@@ -5,13 +5,14 @@ import playerSquareProperty;
 export class AcademicBuilding : public Property {
   int numImprovements;
   int improvementCost;
-  int blockSize;
+  // blocksize will be changed after initialization
+  int blockSize = 3;
   std::string monopolyBlock;
   int tuitionLevels[6];
 public:
   AcademicBuilding
     (std::string name, int position, int cost,
-     int improvementCost, std::string monopolyBlock, int blockSize,
+     int improvementCost, std::string monopolyBlock,
      int tlvls[6]);
 
   int getFee(Player* p) override;
@@ -25,4 +26,7 @@ public:
   int getImprovementCost() const;
   int getBlockSize() const;
   std::string getMonopolyBlock() const;
+
+  // Mutator (needed by board)
+  void setBlockSize(const int size);
 };

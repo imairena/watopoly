@@ -1,13 +1,13 @@
-import <string>;
+export module tools;
 
-using namespace std;
+import <string>;
 
 
 
 // Lets you apply repeated concatenation through multiplication
 // For example, "abc" * 5 produces "abcabcabcabcabc"
-string operator*(string s, int n) {
-  string x = "";
+export std::string operator*(std::string s, int n) {
+  std::string x = "";
   for (int i = 0; i < n; ++i) {
     x += s;
   }

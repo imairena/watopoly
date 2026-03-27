@@ -13,6 +13,11 @@ import non_properties;
 import gym;
 import residence;
 import academicbuilding;
+import card;
+import slc;
+import needleshall;
+import card_types;
+import tools;
 
 using namespace std;
 
@@ -46,12 +51,15 @@ Board::Board(istream& boardIn, istream& squaresIn,
     boardString += line + "\n";
   }
   map<string, int> monopolyBlockCounts;
+  SLC *slcptr = nullptr;
+  NeedlesHall *needleshallptr = nullptr;
+  
   while (getline(squaresIn, line)) {
     stringstream ss{line};
     string squareName, squareType;
     int squarePosition;
     ss >> squareName >> squareType >> squarePosition;
-    std::replace(squareName.begin(), squareName.end(), '_', ' ');
+    replace(squareName.begin(), squareName.end(), '_', ' ');
     int location = squareLocation(squarePosition);
     unique_ptr<Square> squareptr;
     string squareString1 = "", squareString2 = "";
@@ -73,18 +81,20 @@ Board::Board(istream& boardIn, istream& squaresIn,
       boardString.replace(location + 2 * lineWidth, squareName.length(), squareName);
     }
     else if (squareType == "SLC") {
-      squareptr = make_unique<SLC>(squareName, squarePosition);
+      squareptr = make_unique<SLC>(squarePosition);
       squareString1 = "SLC";
-      // ======================================================================== card stuff goes here!
+      if (!slcptr) slcptr = dynamic_cast<SLC*>(squareptr.get());
     }
     else if (squareType == "NeedlesHall") {
-      squareptr = make_unique<NeedlesHall>(squareName, squarePosition);
-      squareString1, squareString2 = "NEEDLES", "HALL";
-      // ======================================================================== card stuff goes here!
+      squareptr = make_unique<NeedlesHall>(squarePosition);
+      squareString1 = "NEEDLES";
+      squareString2 = "HALL";
+      if (!needleshallptr) needleshallptr = dynamic_cast<NeedlesHall*>(squareptr.get());
     }
     else if (squareType == "CollectOSAP") {
       squareptr = make_unique<CollectOSAP>(squareName, squarePosition);
-      squareString1, squareString2 = "COLLECT", "OSAP";
+      squareString1 = "COLLECT";
+      squareString2 = "OSAP";
     }
     else if (squareType == "Tuition") {
       squareptr = make_unique<Tuition>(squareName, squarePosition);
@@ -100,41 +110,58 @@ Board::Board(istream& boardIn, istream& squaresIn,
     }
     else if (squareType == "DCTimsLine") {
       squareptr = make_unique<DCTimsLine>(squareName, squarePosition);
-      squareString1, squareString2 = "DC TIMS", "LINE";
+      squareString1 = "DC TIMS";
+      squareString2 = "LINE";
     }
     else if (squareType == "GooseNesting") {
       squareptr = make_unique<GooseNesting>(squareName, squarePosition);
-      squareString1, squareString2 = "GOOSE", "NESTING";
+      squareString1 = "GOOSE";
+      squareString2 = "NESTING";
     }
     else if (squareType == "GoToTims") {
       squareptr = make_unique<GoToTims>(squareName, squarePosition);
-      squareString1, squareString2 = "GO TO", "TIMS";
+      squareString1 = "GO TO";
+      squareString2 = "TIMS";
     }
     else if (squareType == "CoopFee") {
       squareptr = make_unique<CoopFee>(squareName, squarePosition);
-      squareString1, squareString2 = "COOP", "FEE";
+      squareString1 = "COOP";
+      squareString2 = "FEE";
     }
     
     squares.push_back(squareptr);
     boardString.replace(location, squareString1.length(), squareString1);
     boardString.replace(location + lineWidth, squareString2.length(), squareString2);
 
+    // monopolyBlockSizes depend on other entries in data, so
+    // they must be set after initialization
     for (auto& squareptr : squares) {  // set blockSize of all academic buildings
       if (auto acBuild = dynamic_cast<AcademicBuilding*>(squareptr.get())) {
         acBuild->setBlockSize(monopolyBlockCounts[acBuild->getMonopolyBlock()]);
       }
     }
+
+    // create cards for SLC and NeedlesHall squares
+    createCards(slcptr, needleshallptr, cardsIn);
+
+    // sort squares by position
+    sort(squares.begin(), squares.end(),
+         [](const Square &s1, const Square &s2) {
+           return s1.getPosition() < s2.getPosition();
+         });
   }
 }
 
-void Board::display(ostream& out = cout) {
+// prints a text display of the current board state
+void Board::display(ostream& out) {
   // modify boardString with players/improvements
   string improvementsString;
-  int numImprovements;
+  int numImprovements, location;
   for (auto& squareptr : squares) {  // display improvements
     if (auto acBuild = dynamic_cast<AcademicBuilding*>(squareptr.get())) {
       numImprovements = acBuild->getNumImprovements();
       improvementsString = string("I") * numImprovements;
+      location = squareLocation(acBuild->getPosition());
       boardString.replace(location + lineWidth, numImprovements, improvementsString);
     }
   }
@@ -144,7 +171,50 @@ void Board::display(ostream& out = cout) {
   for (auto playerptr : players) {  // display player positions
     playerPosition = playerptr->getPosition();
     playerToken = playerptr->getToken();
-    boardString.replace(playerPosition + 3 * lineWidth, 1, 1, playerToken);
+    int boardPosition = playerPosition + 3 * lineWidth + playerOffset;
+    boardString.replace(boardPosition, 1, 1, playerToken);
   }
   out << boardString;  // no endl because boardString already ends with "\n"
+}
+
+// Accessor
+Square& Board::getSquare(int i) {
+  return *squares[i];
+}
+
+void Board::createCards(SLC *slcptr, NeedlesHall *needleshallptr, istream& cardsIn){
+  if (!slcptr && !needleshallptr) return;
+  string line;
+  string cardSquare, cardType, cardText;
+  int numCards, cardVal;
+  
+  while (getline(cardsIn, line)) {
+    stringstream ss{line};
+    ss >> cardSquare >> numCards >> cardType >> cardVal >> cardText;
+    replace(cardText.begin(), cardText.end(), '_', ' ');
+    
+    for (int i = 0; i < numCards; ++i) {
+      unique_ptr<Card> cardptr; 
+    
+      if (cardType == "Move") {
+        cardptr = make_unique<MoveCard>(cardText, cardVal);
+      }
+      else if (cardType == "Money") {
+        cardptr = make_unique<MoneyCard>(cardText, cardVal);
+      }
+      else if (cardType == "MoveTo") {
+        cardptr = make_unique<MoveToCard>(cardText, cardVal);
+      }
+      else if (cardType == "GoToTims") {
+        cardptr = make_unique<GoToTimsCard>(cardText, cardVal);
+      }
+
+      if (cardSquare == "SLC" && slcptr) {
+        slcptr->addCard(move(cardptr));
+      }
+      else if (cardSquare == "NeedlesHall" && needleshallptr) {
+        needleshallptr->addCard(move(cardptr));
+      }
+    }
+  }
 }
