@@ -118,6 +118,10 @@ int Player::getLastRoll() const {
   return lastRoll;
 }
 
+void Player::setLastRoll(int roll) {
+  lastRoll = roll;
+}
+
 // Assets
 void Player::assets() const {
     cout << "Player: " << name << endl;

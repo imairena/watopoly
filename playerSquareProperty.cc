@@ -102,6 +102,7 @@ export class Player {
     std::string getName() const;
     char getToken() const;
     int getLastRoll() const;
+    void setLastRoll(int roll);
 
     // Assets display
     void assets() const;
