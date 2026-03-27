@@ -13,12 +13,21 @@ Player* Property::getOwner() const { return owner; }
 int Property::getCost() const { return cost; }
 bool Property::isMortgaged() const { return mortgaged; }
 
-void Property::setOwner(Player* p) { owner = p; }
+void Property::setOwner(Player* p) { 
+  if (owner != nullptr) { // remove property from old owner
+    owner->removeProperty(this);
+  }
+  // change owner
+  owner = p;
+
+  if (owner != nullptr) { // add property to new owner
+    owner->addProperty(this);
+  }
+} // setOwner
 
 void Property::buyProperty(Player* p) {
   p->pay(cost);
   setOwner(p);
-  p->addProperty(this);
   cout << p->getName() << " bought " << getName() << "!" << endl;
 } // buyProperty
 
