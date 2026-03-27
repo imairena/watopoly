@@ -1,6 +1,7 @@
 module card_types;
 
 import <iostream>;
+import <string>;
 
 import card;
 import playerSquareProperty;
@@ -8,6 +9,19 @@ import playerSquareProperty;
 using namespace std;
 
 
+
+// card ctors
+
+MoveCard::MoveCard(string text, int val): Card{text, val} {}
+
+MoneyCard::MoneyCard(string text, int val): Card{text, val} {}
+
+MoveToCard::MoveToCard(string text, int val): Card{text, val} {}
+
+GoToTimsCard::GoToTimsCard(string text, int val): Card{text, val} {}
+
+
+// card applying
 
 void MoveCard::apply(Player* p) {
   cout << text << endl << endl;
