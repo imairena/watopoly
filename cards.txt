@@ -1,0 +1,15 @@
+SLC 3 Move -3 Get_scared_by_a_goose._Move_3_steps_back!
+SLC 4 Move -2 Miss_the_ion_train_and_have_to_walk._Move_2_steps_back!
+SLC 4 Move -1 Get_lost_on_your_way_to_class._Move_1_step_back!
+SLC 3 Move 1 Discover_the_underground_MC_C1_tunnel._Move_1_step_forward!
+SLC 4 Move 2 Use_your_WatCard_bus_pass._Move_2_steps_forward!
+SLC 4 Move 3 Take_the_tunnels_all_the_way_accross_campus._Move_3_steps_forward!
+SLC 1 GoToTims 0 Forget_to_eat_lunch_earlier._Go_to_DC_Tims_Line!
+SLC 1 MoveTo 0 Pass_CS_246._Advance_to_Collect_OSAP!
+NeedlesHall 1 Money -200 Forget_to_get_fees_arranged_before_the_term_starts._Pay_$200!
+NeedlesHall 2 Money -100 A_goose_steals_your_wallet._Pay_$100!
+NeedlesHall 3 Money -50 Lose_your_WatCard._Pay_$50!
+NeedlesHall 6 Money 25 Find_a_W_store_coupon._Gain_$25!
+NeedlesHall 3 Money 50 Win_a_math_contest._Gain_$50!
+NeedlesHall 2 Money 100 Find_a_co-op_job._Gain_$100!
+NeedlesHall 1 Money 200 Earn_a_scholarship._Gain_$200!
