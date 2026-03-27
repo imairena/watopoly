@@ -6,6 +6,8 @@ import <vector>;
 import <memory>;
 
 import playerSquareProperty;
+import slc;
+import needleshall;
 
 
 
@@ -21,6 +23,10 @@ export class Board {
   // convert position on the board to location
   // in in the string boardString
   int squareLocation(int position);
+
+  // creates cards for SLC and NeedlesHall squares
+  void createCards(SLC *slcptr, NeedlesHall *needleshallptr,
+                   std::istream& cardsIn);
 
 public:
   Board(std::istream& boardIn, std::istream& squaresIn,

@@ -9,6 +9,7 @@ card.cc
 card_types.cc
 cardsquare.cc
 slc.cc
+needleshall.cc
 board.cc
 game.cc
 
@@ -23,5 +24,6 @@ card-impl.cc
 card_types-impl.cc
 cardsquare-impl.cc
 slc-impl.cc
+needleshall-impl.cc
 board-impl.cc
 game-impl.cc

@@ -1,5 +1,9 @@
-# ignore object files
+# Object files
 *.o
 
-# ignore cache files
+# Cache files
 gcm.cache/
+*.tmp
+
+# emacs backup files
+*~

@@ -5,10 +5,10 @@ using namespace std;
 
 AcademicBuilding::AcademicBuilding
   (string name, int position, int cost,
-   int improvementCost, string monopolyBlock, int blockSize,
+   int improvementCost, string monopolyBlock,
    int tlvls[6]) : 
     Property(name, position, cost), numImprovements{0}, improvementCost{improvementCost},
-    blockSize{blockSize}, monopolyBlock{monopolyBlock}
+    monopolyBlock{monopolyBlock}
 {
   for (int i = 0; i < 6; i++) {
     tuitionLevels[i] = tlvls[i];
@@ -23,6 +23,11 @@ int AcademicBuilding::getNumImprovements() const { return numImprovements; }
 int AcademicBuilding::getImprovementCost() const { return improvementCost; }
 int AcademicBuilding::getBlockSize() const { return blockSize; }
 string AcademicBuilding::getMonopolyBlock() const { return monopolyBlock; }
+
+// Mutator
+void AcademicBuilding::setBlockSize(const int size) {
+  blockSize = size;
+}
 
 // Other methods
 int AcademicBuilding::getFee(Player* p) {
