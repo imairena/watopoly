@@ -28,7 +28,8 @@ void Tuition::landOn(Player* p) {
     } 
     else if (input == "2") {
       validChoice = true;
-      int totalWorth = p->getMoney();
+      // Calculate total worth of player
+      int totalWorth = p->getMoney(); 
       // Calculate total worth of properties owned
       for (Property* prop : p->getProperties()) {
         totalWorth += prop->getCost();

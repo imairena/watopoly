@@ -159,7 +159,25 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled) {
 
 void Game::handleBankrupt(Player& currPlayer) {}
 void Game::handleTrade(Player& currPlayer) {}
-void Game::handleImprove(Player& currPlayer) {}
+void Game::handleImprove(Player& currPlayer) {
+  string propName, action;
+  cin >> propName;
+  cin >> action;
+
+  Property* prop = board.getProperty(propName);
+  
+  // check if property exists and currPlayer owns it
+  if (prop == nullptr) { cout << "Invalid Property" << endl; }
+  else if (prop->getOwner() != &currPlayer) {
+    cout << "You can only modify properties you own." << endl;
+  } else {
+    // check if property is academic building
+
+    // check if monopoly is owned
+
+    // check number of improvements is within valid range (0-5)
+
+} // handleImprove
 
 void Game::handleMortgage(Player& currPlayer) {
   string propName;

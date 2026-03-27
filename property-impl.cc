@@ -50,6 +50,10 @@ void Property::mortgage() {
 
 } // mortgage
 
+void Property::auction() {
+  // to do
+} // auction
+
 void Property::unmortgage() {
   if (owner == nullptr) {
     cout << "Cannot unmortgage unowned properties." << endl;
