@@ -69,7 +69,7 @@ void Game::addPlayer(const string name, const char token) {
 void Game::playTurn() {
   Player& currPlayer = players[currentPlayer];
   string command;
-  bool hasRolled;
+  bool hasRolled = false;
 
   cout << currPlayer.getName() << ", enter command:" << endl;
   while (cin >> command) {
@@ -96,7 +96,7 @@ void Game::playTurn() {
 
       ofstream out{filename};
       saveGame(out);
-      cout <, "Game saved successfully to " << filename << endl;
+      cout << "Game saved successfully to " << filename << endl;
     } // if save
     else if (command == "bankrupt") {
       handleBankrupt(currPlayer);
@@ -145,7 +145,7 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled) {
     }
 
     // apply square action
-    board.getSquare(newPos)->landOn(&currPlayer);
+    board.getSquare(newPos).landOn(&currPlayer);
 
     // check if player rolled doubles
     if (die1 == die2) {
@@ -173,7 +173,7 @@ void Game::handleMortgage(Player& currPlayer) {
   } else {
     // check property for improvements
     AcademicBuilding* ab = dynamic_cast<AcademicBuilding*>(prop);
-    if (ab != nullptr && ab->getNumImprovements > 0) {
+    if (ab != nullptr && ab->getNumImprovements() > 0) {
       cout << "You must sell all improvements before mortgaging." << endl;
     } else {
       prop->mortgage();
