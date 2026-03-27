@@ -23,6 +23,6 @@ public:
   int getCost() const override;
   int getNumImprovements() const;
   int getImprovementCost() const;
-  int getblockSize() const;
+  int getBlockSize() const;
   std::string getMonopolyBlock() const;
 };

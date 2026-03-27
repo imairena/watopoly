@@ -3,21 +3,30 @@ import <string>;
 import playerSquareProperty;
 using namespace std;
 
-AcademicBuilding
+AcademicBuilding::AcademicBuilding
   (string name, int position, int cost,
    int improvementCost, string monopolyBlock, int blockSize,
    int tlvls[6]) : 
-    Property(name, position, cost), improvementCost{improvementCost},
-    blockSize{blockSize}, monopolyBlock{monopolyBlock}, 
-    numImprovements{0}
+    Property(name, position, cost), numImprovements{0}, improvementCost{improvementCost},
+    blockSize{blockSize}, monopolyBlock{monopolyBlock}
 {
   for (int i = 0; i < 6; i++) {
     tuitionLevels[i] = tlvls[i];
   } // loop
 } // ctor
 
+// Accessors
+int AcademicBuilding::getCost() const {
+  return Property::getCost() + (numImprovements * improvementCost);
+}
+int AcademicBuilding::getNumImprovements() const { return numImprovements; }
+int AcademicBuilding::getImprovementCost() const { return improvementCost; }
+int AcademicBuilding::getBlockSize() const { return blockSize; }
+string AcademicBuilding::getMonopolyBlock() const { return monopolyBlock; }
+
+// Other methods
 int AcademicBuilding::getFee(Player* p) {
-  if (owner == nullptr) return 0;
+  if (getOwner() == nullptr) return 0;
   if (isMortgaged()) return 0;
 
   // check for monopoly
@@ -28,13 +37,21 @@ int AcademicBuilding::getFee(Player* p) {
   return tuitionLevels[numImprovements];
 } // getFee
 
-void addImprovement();
-void removeImprovement();
-bool hasMonopoly();
-
-// Accessors
-int getCost() const override;
-int getNumImprovements() const;
-int getImprovementCost() const;
-int getblockSize() const;
-string getMonopolyBlock() const;
+void AcademicBuilding::addImprovement() { 
+  if (numImprovements < 5) numImprovements++;
+}
+void AcademicBuilding::removeImprovement() {
+  if (numImprovements > 0) numImprovements--;
+}
+bool AcademicBuilding::hasMonopoly() {
+  if (getOwner() == nullptr) return false;
+  int numSameBlock = 0;
+  // Loop through properties
+  for (Property* prop : getOwner()->getProperties()) {
+    AcademicBuilding* ab = dynamic_cast<AcademicBuilding*>(prop); // check if prop is ab
+    if (ab != nullptr && ab->getMonopolyBlock() == monopolyBlock) { // check if same block
+      numSameBlock++;
+    } // if
+  } // loop
+  return numSameBlock == blockSize;
+} // hasMonopoly
