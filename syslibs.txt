@@ -1,7 +1,9 @@
 iostream
+fstream
 vector
 memory
 map
 sstream
 algorithm
+random
 string

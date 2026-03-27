@@ -1,6 +1,7 @@
 export module tools;
 
 import <string>;
+import <random>;
 
 
 
@@ -12,4 +13,12 @@ export std::string operator*(std::string s, int n) {
     x += s;
   }
   return x;
+}
+
+// Generates a random number between min and max
+export int generateRandom(int min, int max) {
+  static std::random_device rd;
+  static std::mt19937 gen(rd());
+  std::uniform_int_distribution<> distrib(min, max);
+  return distrib(gen);
 }
