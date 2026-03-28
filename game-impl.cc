@@ -169,7 +169,7 @@ void Game::handleRoll(Player& currPlayer, bool hasRolled, bool testMode) {
   }
 
     // apply square action
-    Square* landedSquare = &board.getSquare(newPos);
+    Square* landedSquare = &board.getSquare(newPos); // getSquare returns by reference
     landedSquare->landOn(&currPlayer);
     cout << currPlayer.getName() << " landed on " << landedSquare->getName() << "." << endl;
     // if the square was a property and was not bought, need to auction,
@@ -385,7 +385,7 @@ void Game::handleAuction(Property* prop) {
   // track highest bidder and highest bid
   int highestBid = 0;
   Player* highestBidder = nullptr;
-  int currBidderIdx = 0;
+  size_t currBidderIdx = 0;
 
   // track players who are still bidding
   std::vector<Player*> activePlayers;
@@ -406,7 +406,8 @@ void Game::handleAuction(Property* prop) {
       activePlayers.erase(activePlayers.begin() + currBidderIdx); // Note players are shifted
 
       // if deleted last player, then need to reset index
-      if (currBidderIdx >= activePlayers.size()) { currBidderIdx = 0; }
+      // Note: This comparison is why currBidderIdx is size_t
+      if (currBidderIdx >= activePlayers.size()) { currBidderIdx = 0; } 
     }
     else {
       // check that input is: an int, within player's budget, and higher than previous' bid
@@ -416,7 +417,7 @@ void Game::handleAuction(Property* prop) {
         if (amount <= highestBid) {
           cout << "Bid must be higher than $" << highestBid << "." << endl;
         }
-        else if (currBidder.getMoney() < amount) {
+        else if (currBidder->getMoney() < amount) {
           cout << "You cannot bid this much money, you only have $"
             << currBidder->getMoney() << " cash." << endl;
         }
