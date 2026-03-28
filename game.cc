@@ -18,7 +18,7 @@ export class Game {
 
   // helper methods (private)
   void handleRoll(Player& currPlayer, bool hasRolled, bool testMode);
-  void handleBankrupt(Player& currPlayer);
+  bool handleBankrupt(Player& currPlayer, int amountOwed, Player* creditor);
   void handleTrade(Player& currPlayer);
   void handleMortgage(Player& currPlayer);
   void handleUnmortgage(Player& currPlayer);
