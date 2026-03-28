@@ -209,6 +209,7 @@ void Game::handleImprove(Player& currPlayer) {
         ab->removeImprovement();
         cout << "Sold improvement on " << propName << "for $" << sellingCost
           << ". Improvements left: " << ab->getNumImprovements() << "." <<  endl;
+      }
     }
     else {
       cout << "Invalid action" << endl;
