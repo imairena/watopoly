@@ -222,7 +222,7 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
   // ---- ROLL UP THE RIM LOGIC ----
   bool isCupSquare =
     (landedSquare->getName() == "SLC" ||
-     landedSquare->getName() == "Needles Hall");
+     landedSquare->getName() == "NEEDLES HALL");
 
   if (isCupSquare && totalCups < maxCups) {
     int chance = generateRandom(1, 100);
@@ -233,7 +233,7 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
       currPlayer.addCup();
       totalCups++;
 
-      cout << "You now have: " << curr.Player.getCups() << " cup(s)." << endl;
+      cout << "You now have: " << currPlayer.getCups() << " cup(s)." << endl;
       // Skip normal square effect
       return;
     }
