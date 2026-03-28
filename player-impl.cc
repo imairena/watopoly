@@ -8,7 +8,9 @@ using namespace std;
 // Constructor
 Player::Player(const string &name, char token)
   : name{name}, token{token}, money{1500}, position{0}, timsCups{0},
-    inTims{false}, timsTurns{0}, isBankrupt{false} {}
+    inTims{false}, timsTurns{0}, isBankrupt{false}, lastRoll{0},
+    debt{0}, creditor{nullptr}
+{}
 
 // Movement
 void Player::move(int steps) {
@@ -40,6 +42,22 @@ void Player::receive(int amount) {
 
 int Player::getMoney() const {
   return money;
+}
+
+int Player::getDebt() const {
+  return debt;
+}
+
+void Player::setDebt(int amt) {
+  debt = amt;
+}
+
+Player* Player::getCreditor() const {
+  return creditor;
+}
+
+void Player::setCreditor(Player* p) {
+  creditor = p;
 }
 
 // Properties

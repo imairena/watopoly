@@ -102,7 +102,7 @@ bool Game::playTurn(bool testMode) {
     } // if save
     else if (command == "bankrupt") {
       bool isBankrupt = handleBankrupt(currPlayer, currPlayer.getDebt(), currPlayer.getCreditor());
-      if (isBankrupt) return; // turn is over if player declares bankruptcy
+      if (isBankrupt) return true; // turn is over if player declares bankruptcy
     }
     else if (command == "trade") {
       handleTrade(currPlayer);
@@ -327,9 +327,12 @@ bool Game::handleBankrupt(Player& currPlayer, int amountOwed = 0, Player* credit
     for (auto prop : props) {
       if (prop->isMortgaged()) {
         prop->unmortgage();  // properties go to auction as unmortgaged
+        // Note: This will charge the bankrupt player the unmortage fee, which
+        // will add to their debt, but player is already bankrupt so not
+        // important
       }
       prop->setOwner(nullptr);
-      prop->auction();
+      handleAuction(prop);
     }
 
     // Destroy all Roll Up the Rim cups
@@ -347,7 +350,7 @@ bool Game::handleBankrupt(Player& currPlayer, int amountOwed = 0, Player* credit
         cout << creditor->getName() << " paid $" << fee
              << " (10% fee) for mortgaged property: " << prop->getName() << endl;
 
-        Offer creditor the option to unmortgage immediately
+        //  Offer creditor the option to unmortgage immediately
         cout << "Would you like to unmortgage " << prop->getName()
              << " now for $" << (prop->getCost() / 2) << "? (1 = Yes, 2 = No)" << endl;
         int unmortgageChoice;

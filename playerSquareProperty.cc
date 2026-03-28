@@ -61,6 +61,8 @@ export class Player {
   std::vector<Property*> properties;
   bool isBankrupt;
   int lastRoll;
+  int debt;
+  Player* creditor;
 
 public:
   // Constructor
@@ -75,6 +77,10 @@ public:
   void pay(int amount);
   void receive(int amount);
   int getMoney() const;
+  int getDebt() const;
+  void setDebt(int amt);
+  Player* getCreditor() const;
+  void setCreditor(Player* p);
 
   // Properties
   void addProperty(Property* p);
