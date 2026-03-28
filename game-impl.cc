@@ -218,6 +218,28 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
   // apply square action
   Square* landedSquare = &board.getSquare(newPos); // getSquare returns by reference
   cout << currPlayer.getName() << " landed on " << landedSquare->getName() << "." << endl;
+  
+  // ---- ROLL UP THE RIM LOGIC ----
+  bool isCupSquare =
+    (landedSquare->getName() == "SLC" ||
+     landedSquare->getName() == "Needles Hall");
+
+  if (isCupSquare && totalCups < maxCups) {
+    int chance = generateRandom(1, 100);
+
+    if (chance == 67) {  // 1% chance
+      cout << "Congratulations! You won a Roll Up the Rim cup!" << endl;
+
+      currPlayer.addCup();
+      totalCups++;
+
+      cout << "You now have: " << curr.Player.getCups() << " cup(s)." << endl;
+      // Skip normal square effect
+      return;
+    }
+  }
+
+  // ---- NORMAL SQUARE EFFECT ----
   landedSquare->landOn(&currPlayer);
      
   // check if passed collectOSAP (check >40 since =40 is handled by 
