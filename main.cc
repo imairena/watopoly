@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
       game.addPlayer(name, token);
     }
   }
-  
+
   bool runGame = true;
   while (runGame) {
     runGame = game.playTurn(flagTest);

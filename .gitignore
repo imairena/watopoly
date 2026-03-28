@@ -5,5 +5,7 @@
 gcm.cache/
 *.tmp
 
-# emacs backup files
+# emacs backup/temp files
 *~
+\#*\#
+.\#*
