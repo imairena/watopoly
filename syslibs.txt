@@ -1,5 +1,6 @@
 iostream
 fstream
+sstream
 vector
 memory
 map

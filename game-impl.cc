@@ -2,6 +2,7 @@ module game;
 
 import <iostream>;
 import <fstream>;
+import <sstream>;
 import <vector>;
 import <string>;
 import <sstream>;
@@ -167,8 +168,16 @@ void Game::handleRoll(Player& currPlayer, bool hasRolled, bool testMode) {
     currPlayer.receive(200);
   }
 
-  // apply square action
-  board.getSquare(newPos).landOn(&currPlayer);
+    // apply square action
+    Square* landedSquare = &board.getSquare(newPos);
+    landedSquare->landOn(&currPlayer);
+    cout << currPlayer.getName() << " landed on " << landedSquare->getName() << "." << endl;
+    // if the square was a property and was not bought, need to auction,
+    // otherwise just move on with the turn
+    Property* landedProp = dynamic_cast<Property*>(landedSquare);
+    if (landedProp != nullptr && landedProp->getOwner() == nullptr) {
+      handleAuction(landedProp);
+    }
 
   // check if player rolled doubles
   if (die1 == die2) {
@@ -370,7 +379,68 @@ bool Game::handleBankrupt(Player& currPlayer, int amountOwed = 0, Player* credit
     currentPlayer = 0;
   }
   return true;
-}
+} // handleBankrupt
+
+void Game::handleAuction(Property* prop) {
+  // track highest bidder and highest bid
+  int highestBid = 0;
+  Player* highestBidder = nullptr;
+  int currBidderIdx = 0;
+
+  // track players who are still bidding
+  std::vector<Player*> activePlayers;
+  for (auto& p : players) { activePlayers.emplace_back(&p); }
+
+  // auction
+  while (activePlayers.size() > 1) {
+    // Ask bidder for bid
+    Player* currBidder = activePlayers[currBidderIdx];
+    cout << currBidder->getName() << " is up. Enter a bid greater than $" <<
+      highestBid << ", or type 'leave'" << endl;
+    string input;
+    cin >> input;
+
+    // Check input
+    if (input == "leave") {
+      cout << currBidder->getName() << " has left the auction." << endl;
+      activePlayers.erase(activePlayers.begin() + currBidderIdx); // Note players are shifted
+
+      // if deleted last player, then need to reset index
+      if (currBidderIdx >= activePlayers.size()) { currBidderIdx = 0; }
+    }
+    else {
+      // check that input is: an int, within player's budget, and higher than previous' bid
+      istringstream iss{input};
+      int amount;
+      if (iss >> amount && iss.eof()) {
+        if (amount <= highestBid) {
+          cout << "Bid must be higher than $" << highestBid << "." << endl;
+        }
+        else if (currBidder.getMoney() < amount) {
+          cout << "You cannot bid this much money, you only have $"
+            << currBidder->getMoney() << " cash." << endl;
+        }
+        else {
+          // no issues
+          highestBid = amount;
+          highestBidder = currBidder;
+          cout << highestBidder->getName() << " bid $" << highestBid << "!" << endl;
+          currBidderIdx = (currBidderIdx + 1) % activePlayers.size(); // next player
+        }
+      } else {
+        cout << "Invalid input." << endl;
+      } 
+    } // input was not 'leave'
+  } // while
+
+  // Declare winner
+  if (highestBidder == nullptr) { highestBidder = activePlayers[0]; }
+  cout << "Going once, going twice, sold! " << highestBidder->getName()
+    << " bought " << prop->getName() << " for $" << highestBid << "!!" << endl;
+  highestBidder->pay(highestBid);
+  prop->setOwner(highestBidder);
+} // handleAuction
+
 void Game::handleTrade(Player& currPlayer) {}
 void Game::handleImprove(Player& currPlayer) {
   string propName, action;

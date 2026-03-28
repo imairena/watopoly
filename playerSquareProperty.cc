@@ -39,7 +39,6 @@ public:
   void buyProperty(Player* p);
   void mortgage();
   void unmortgage();
-  void auction();
   void setOwner(Player* p);
   void landOn(Player* p) override;
 
