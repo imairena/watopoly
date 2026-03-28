@@ -19,13 +19,13 @@ CardSquare::CardSquare(string name, int position):
 
 void CardSquare::landOn(Player* p) {
   vector<unique_ptr<Card>>& cards = getCards();
+  cards[currentCard]->apply(p);
   currentCard = (currentCard + 1) % cards.size();
   if (currentCard == 0) {
     cout << "\nEnd of " << getName() << " deck." << endl;
     cout << "Now reshuffling cards." << endl << endl;
     shuffleCards();
   }
-  cards[currentCard]->apply(p);
 }
 
 void CardSquare::shuffleCards() {
