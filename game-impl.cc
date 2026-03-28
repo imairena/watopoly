@@ -172,11 +172,48 @@ void Game::handleImprove(Player& currPlayer) {
     cout << "You can only modify properties you own." << endl;
   } else {
     // check if property is academic building
-
+    AcademicBuilding* ab = dynamic_cast<AcademicBuilding*>(prop);
+    if (ab == nullptr) {
+      cout << "You can only improve academic buildings." << endl;
+    }
     // check if monopoly is owned
-
-    // check number of improvements is within valid range (0-5)
-
+    else if (!ab->hasMonopoly()) {
+      cout << "Need monopoly to improve " << propName << "." << endl;
+    }
+    else if (action == "buy") {
+      int improvementCost = ab->getImprovementCost();
+      // check if reached max number of improvements
+      if (ab->getNumImprovements() == 5) {
+        cout << propName << " is maxed out." << endl;
+      }
+      // check if player has enough money
+      else if (currPlayer.getMoney() < improvementCost) {
+        cout << "You do not have enough money to improve " << propName << "." << endl;
+      }
+      // buy improvement if no issues
+      else {
+        currPlayer.pay(improvementCost);
+        ab->addImprovement();
+        cout << propName << " was improved! Number of improvements: "
+          << ab->getNumImprovements() << "." << endl;
+      }
+    }
+    else if (action == "sell") {
+      // check if any improvements are owned
+      if (ab->getNumImprovements() == 0) {
+        cout << propName << " has no improvements." << endl;
+      }
+      else {
+        int sellingCost = ab->getImprovementCost() / 2;
+        currPlayer.receive(sellingCost);
+        ab->removeImprovement();
+        cout << "Sold improvement on " << propName << "for $" << sellingCost
+          << ". Improvements left: " << ab->getNumImprovements() << "." <<  endl;
+    }
+    else {
+      cout << "Invalid action" << endl;
+    }
+  } 
 } // handleImprove
 
 void Game::handleMortgage(Player& currPlayer) {
