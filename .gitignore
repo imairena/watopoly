@@ -9,3 +9,6 @@ gcm.cache/
 *~
 \#*\#
 .\#*
+
+# output file
+a.out

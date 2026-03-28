@@ -17,7 +17,7 @@ vector<unique_ptr<Card>>& NeedlesHall::getCards() {
   return cards;
 }
 
-NeedlesHall::NeedlesHall(int position): CardSquare{string("NeedlesHall"), position} {}
+NeedlesHall::NeedlesHall(int position): CardSquare{string("NEEDLES HALL"), position} {}
 
 void NeedlesHall::addCard(unique_ptr<Card> card) {
   cards.emplace_back(move(card));

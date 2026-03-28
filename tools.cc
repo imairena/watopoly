@@ -2,6 +2,7 @@ export module tools;
 
 import <string>;
 import <random>;
+import <vector>;
 
 
 
@@ -21,4 +22,13 @@ export int generateRandom(int min, int max) {
   static std::mt19937 gen(rd());
   std::uniform_int_distribution<> distrib(min, max);
   return distrib(gen);
+}
+
+// randomizes the order of a given vector
+export template <typename T>
+void shuffleVector(std::vector<T>& vec) {
+    for (int i = vec.size() - 1; i > 0; --i) {
+        int j = generateRandom(0, i);
+        std::swap(vec[i], vec[j]);
+    }
 }

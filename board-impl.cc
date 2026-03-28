@@ -68,7 +68,7 @@ Board::Board(istream& boardIn, istream& squaresIn,
       string squareMonopolyBlock;
       int squareCost, squareImprovementCost;
       int squareTuitionLevels[6];
-      ss >> squareCost >> squareImprovementCost;
+      ss >> squareMonopolyBlock >> squareCost >> squareImprovementCost;
       for (int i = 0; i < 6; ++i) {
         ss >> squareTuitionLevels[i];
       }
@@ -132,24 +132,26 @@ Board::Board(istream& boardIn, istream& squaresIn,
     squares.push_back(move(squareptr));
     boardString.replace(location, squareString1.length(), squareString1);
     boardString.replace(location + lineWidth, squareString2.length(), squareString2);
-
-    // monopolyBlockSizes depend on other entries in data, so
-    // they must be set after initialization
-    for (auto& squareptr : squares) {  // set blockSize of all academic buildings
-      if (auto acBuild = dynamic_cast<AcademicBuilding*>(squareptr.get())) {
-        acBuild->setBlockSize(monopolyBlockCounts[acBuild->getMonopolyBlock()]);
-      }
-    }
-
-    // create cards for SLC and NeedlesHall squares
-    createCards(slcptr, needleshallptr, cardsIn);
-
-    // sort squares by position
-    sort(squares.begin(), squares.end(),
-         [](const std::unique_ptr<Square>& s1, const std::unique_ptr<Square>& s2) {
-           return s1->getPosition() < s2->getPosition();
-         });
   }
+  
+  // monopolyBlockSizes depend on other entries in data, so
+  // they must be set after initialization
+  for (auto& squareptr : squares) {  // set blockSize of all academic buildings
+    if (auto acBuild = dynamic_cast<AcademicBuilding*>(squareptr.get())) {
+      acBuild->setBlockSize(monopolyBlockCounts[acBuild->getMonopolyBlock()]);
+    }
+  }
+
+  // create cards for SLC and NeedlesHall squares
+  createCards(slcptr, needleshallptr, cardsIn);
+  if (slcptr) slcptr->shuffleCards();
+  if (needleshallptr) needleshallptr->shuffleCards();
+
+  // sort squares by position
+  sort(squares.begin(), squares.end(),
+       [](const std::unique_ptr<Square>& s1, const std::unique_ptr<Square>& s2) {
+         return s1->getPosition() < s2->getPosition();
+       });
 }
 
 // prints a text display of the current board state
@@ -188,7 +190,18 @@ Square& Board::getSquare(const int i) const {
 Property* Board::getProperty(const string propName) const {
   for (auto& squareptr : squares) {
     if (auto prop = dynamic_cast<Property*>(squareptr.get())) {
-      return prop;
+      if (prop->getName() == propName) {
+        return prop;
+      }
+    }
+  }
+  return nullptr;
+}
+
+Player* Board::getPlayer(const string playerName) const {
+  for (auto& p : *players) {
+    if (p.getName() == playerName) {
+      return &p;
     }
   }
   return nullptr;
@@ -247,6 +260,29 @@ void Board::saveBoard(ostream& gameOut) const {
         gameOut << 0;
       }
       gameOut << endl;
+    }
+  }
+}
+
+// Loading a presaved game
+void Board::loadBoard(istream& gameIn) {
+  string line, propName, playerName;
+  int improvements;
+  
+  while (getline(gameIn, line)) {
+    stringstream ss{line};
+    ss >> propName >> playerName >> improvements;
+    Property *prop = getProperty(propName);
+    Player *player = getPlayer(playerName);
+
+    prop->setOwner(player);
+
+    // set improvements/mortgaged status
+    if (improvements == -1) {
+      prop->mortgage();
+    } else if (improvements > 0) {
+      auto acBuild = dynamic_cast<AcademicBuilding*>(prop);
+      acBuild->setNumImprovements(improvements);
     }
   }
 }

@@ -10,11 +10,11 @@ import card;
 
 
 export class CardSquare: public Square {
-  //std::vector<std::unique_ptr<Card>> cards;
   int currentCard = 0;
 protected:
   virtual std::vector<std::unique_ptr<Card>>& getCards() = 0;
 public:
   CardSquare(std::string name, int position);
   void landOn(Player* p);
+  void shuffleCards();
 };

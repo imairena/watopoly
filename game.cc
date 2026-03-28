@@ -18,7 +18,9 @@ export class Game {
 
   // helper methods (private)
   void handleRoll(Player& currPlayer, bool& hasRolled, bool testMode);
-  void handleBankrupt(Player& currPlayer);
+  bool handleBankrupt(Player& currPlayer, int amountOwed, Player* creditor);
+  void handleRoll(Player& currPlayer, bool& hasRolled);
+  void handleAuction(Property* prop);
   void handleTrade(Player& currPlayer);
   void handleMortgage(Player& currPlayer);
   void handleUnmortgage(Player& currPlayer);
@@ -27,6 +29,7 @@ export class Game {
 public:
   Game(std::istream& boardIn, std::istream& squaresIn,
        std::istream& cardsIn);
+  int getActivePlayers() const;
   bool playTurn(bool testMode);
   void nextPlayer(std::ostream& out = std::cout);
   void loadGame(std::istream& gameIn);
