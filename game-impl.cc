@@ -72,8 +72,9 @@ bool Game::playTurn(bool testMode) {
   string command;
   bool hasRolled = false;
 
-  cout << currPlayer.getName() << ", enter command:" << endl;
+  cout << "Player " << currPlayer.getName() << ", enter command:" << endl;
   while (cin >> command) {
+    cout << endl;
     if (command == "roll") {
       handleRoll(currPlayer, hasRolled, testMode);
     } // if roll
@@ -114,7 +115,10 @@ bool Game::playTurn(bool testMode) {
     } 
     else if (command == "improve") {
       handleImprove(currPlayer);
-    } 
+    }  
+    else if (command == "board") {
+      board.display();
+    }
     else if (command == "exit") {
       cout << "Thank you for playing Watopoly!";
       return false;
@@ -122,6 +126,8 @@ bool Game::playTurn(bool testMode) {
     else {
       cout << "Invalid command." << endl;
     }
+    // prompt next command
+    cout << "Player " << currPlayer.getName() << ", enter command:" << endl;
   } // while
   return false;
 } // playTurn
@@ -151,8 +157,12 @@ void Game::handleRoll(Player& currPlayer, bool hasRolled, bool testMode) {
     die1 = generateRandom(1, 6);
     die2 = generateRandom(1, 6);
   }
+
+  board.display();
+  
   int rollSum = die1 + die2;
-  cout << currPlayer.getName() << " rolled a " << rollSum << "!" << endl;
+  cout << currPlayer.getName() << " rolled " << die1
+       << " + " << die2 << " = " << rollSum << "!" << endl;
       
   // update player
   currPlayer.setLastRoll(rollSum);

@@ -1,6 +1,7 @@
 import <iostream>;
 import <string>;
 import <fstream>;
+import <sstream>;
 
 import game;
 
@@ -36,12 +37,58 @@ int main(int argc, char *argv[]) {
   ifstream cardsIn{cardsFile};
 
   Game game{boardIn, squaresIn, cardsIn};
-  
+
+  // load saved game
   if (flagLoad) {
     ifstream gameIn{gameFile};
     game.loadGame(gameIn);
   }
-
+  else { // else, add players manually
+    int numPlayers;
+    string numPlayersString;
+    cout << "How many players are playing? (2-6)" << endl;
+    
+    while (true) {
+      cin >> numPlayersString;
+      istringstream ss{numPlayersString};
+      if (ss >> numPlayers && 2 <= numPlayers && numPlayers <= 6) {
+        break;
+      } else cout << "Invalid number of players. Try again." << endl;
+    }
+    
+    // add players
+    string validTokens = "GBDPS$LT";
+    for (int i = 0; i < numPlayers; ++i) {
+      string name;
+      string tokenString;
+      char token;
+      
+      // get name
+      cout << "Enter player " << i + 1 << "'s name" << endl
+           << "(Note, name may not be \"BANK\")" << endl;
+      while (true) {
+        cin >> name;
+        if (name != "BANK") break;
+        else cout << "Invalid name. Try again." << endl
+                  << "(Note, name may not be \"BANK\")" << endl;
+      }
+      
+      // get token
+      cout << "Enter player " << i + 1 << "'s token" << endl
+           << "(Note, token must be one of G, B, D, P, S, $, L, or T)" << endl;
+      while (true) {
+        cin >> tokenString;
+        istringstream ss{tokenString};
+        if (tokenString.length() == 1 && ss >> token
+            && validTokens.find(token) != string::npos) break;
+        else cout << "Invalid token. Try again." << endl
+                  << "(Note, token must be one of G, B, D, P, S, $, L, or T)" << endl;
+      }
+      
+      game.addPlayer(name, token);
+    }
+  }
+  
   bool runGame = true;
   while (runGame) {
     runGame = game.playTurn(flagTest);
