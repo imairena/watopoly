@@ -542,7 +542,7 @@ void Game::handleImprove(Player& currPlayer) {
     }
     // check if monopoly is owned
     else if (!ab->hasMonopoly()) {
-      cout << "Need monopoly to improve " << propName << "." << endl;
+      cout << "Need monopoly to buy/sell improvements for " << propName << "." << endl;
     }
     else if (action == "buy") {
       int improvementCost = ab->getImprovementCost();

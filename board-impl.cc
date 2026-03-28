@@ -68,7 +68,7 @@ Board::Board(istream& boardIn, istream& squaresIn,
       string squareMonopolyBlock;
       int squareCost, squareImprovementCost;
       int squareTuitionLevels[6];
-      ss >> squareCost >> squareImprovementCost;
+      ss >> squareMonopolyBlock >> squareCost >> squareImprovementCost;
       for (int i = 0; i < 6; ++i) {
         ss >> squareTuitionLevels[i];
       }
