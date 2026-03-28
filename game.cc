@@ -17,7 +17,7 @@ export class Game {
   const int maxCups = 4;
 
   // helper methods (private)
-  void handleRoll(Player& currPlayer, bool& hasRolled);
+  void handleRoll(Player& currPlayer, bool hasRolled, bool testMode);
   void handleBankrupt(Player& currPlayer);
   void handleTrade(Player& currPlayer);
   void handleMortgage(Player& currPlayer);
@@ -27,7 +27,7 @@ export class Game {
 public:
   Game(std::istream& boardIn, std::istream& squaresIn,
        std::istream& cardsIn);
-  void playTurn();
+  bool playTurn(bool testMode);
   void nextPlayer(std::ostream& out = std::cout);
   void loadGame(std::istream& gameIn);
   void saveGame(std::ostream& gameOut) const;
