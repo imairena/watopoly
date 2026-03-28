@@ -24,7 +24,7 @@ using namespace std;
 
 
 // convert position on the board to location in in the string boardString
-int Board::squareLocation(int position) {
+int Board::squareLocation(const int position) const {
   int topLeft = 1 + lineWidth;
   if (position <= 10) {  // bottom row
     int bottomRight = topLeft + 10 * squareWidth + 10 * rowHeight;
@@ -177,12 +177,23 @@ void Board::display(ostream& out) {
   out << boardString;  // no endl because boardString already ends with "\n"
 }
 
-// Accessor
-Square& Board::getSquare(int i) {
+// Accessors
+Square& Board::getSquare(const int i) const {
   return *squares[i];
 }
 
-void Board::createCards(SLC *slcptr, NeedlesHall *needleshallptr, istream& cardsIn){
+Property* Board::getProperty(const string propName) const {
+  for (auto& squareptr : squares) {
+    if (auto prop = dynamic_cast<Property*>(squareptr.get())) {
+      return prop;
+    }
+  }
+  return nullptr;
+}
+
+// Card initialization
+void Board::createCards(SLC *slcptr, NeedlesHall *needleshallptr,
+                        istream& cardsIn) const {
   if (!slcptr && !needleshallptr) return;
   string line;
   string cardSquare, cardType, cardText;
@@ -215,6 +226,24 @@ void Board::createCards(SLC *slcptr, NeedlesHall *needleshallptr, istream& cards
       else if (cardSquare == "NeedlesHall" && needleshallptr) {
         needleshallptr->addCard(move(cardptr));
       }
+    }
+  }
+}
+
+// Saving the current board state
+void Board::saveBoard(ostream& gameOut) const {
+  for (auto& squareptr : squares) {
+    if (auto prop = dynamic_cast<Property*>(squareptr.get())) {
+      gameOut << prop->getName() << " " << prop->getOwner() << " ";
+      if (prop->isMortgaged()) {
+        gameOut << -1;
+      }
+      else if (auto acBuild = dynamic_cast<AcademicBuilding*>(squareptr.get())) {
+        gameOut << acBuild->getNumImprovements();
+      } else {
+        gameOut << 0;
+      }
+      gameOut << endl;
     }
   }
 }
