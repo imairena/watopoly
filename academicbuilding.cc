@@ -27,6 +27,7 @@ public:
   int getBlockSize() const;
   std::string getMonopolyBlock() const;
 
-  // Mutator (needed by board)
+  // Mutators
   void setBlockSize(const int size);
+  void setNumImprovements(const int num);
 };

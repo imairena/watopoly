@@ -32,8 +32,11 @@ public:
   Board(std::istream& boardIn, std::istream& squaresIn,
         std::istream& cardsIn, std::vector<Player>* players);
   void display(std::ostream& out = std::cout);
+  // Save/load file
   void saveBoard(std::ostream& gameOut) const;
+  void loadBoard(std::istream& gameIn);
   // Accessors
   Square& getSquare(const int i) const;
   Property* getProperty(const std::string propName) const;
+  Player* getPlayer(const std::string playerName) const;
 };

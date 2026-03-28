@@ -24,9 +24,13 @@ int AcademicBuilding::getImprovementCost() const { return improvementCost; }
 int AcademicBuilding::getBlockSize() const { return blockSize; }
 string AcademicBuilding::getMonopolyBlock() const { return monopolyBlock; }
 
-// Mutator
+// Mutators
 void AcademicBuilding::setBlockSize(const int size) {
   blockSize = size;
+}
+
+void AcademicBuilding::setNumImprovements(const int num) {
+  numImprovements = num;
 }
 
 // Other methods

@@ -190,7 +190,18 @@ Square& Board::getSquare(const int i) const {
 Property* Board::getProperty(const string propName) const {
   for (auto& squareptr : squares) {
     if (auto prop = dynamic_cast<Property*>(squareptr.get())) {
-      return prop;
+      if (prop->getName() == propName) {
+        return prop;
+      }
+    }
+  }
+  return nullptr;
+}
+
+Player* Board::getPlayer(const string playerName) const {
+  for (auto& p : *players) {
+    if (p.getName() == playerName) {
+      return &p;
     }
   }
   return nullptr;
@@ -249,6 +260,29 @@ void Board::saveBoard(ostream& gameOut) const {
         gameOut << 0;
       }
       gameOut << endl;
+    }
+  }
+}
+
+// Loading a presaved game
+void Board::loadBoard(istream& gameIn) {
+  string line, propName, playerName;
+  int improvements;
+  
+  while (getline(gameIn, line)) {
+    stringstream ss{line};
+    ss >> propName >> playerName >> improvements;
+    Property *prop = getProperty(propName);
+    Player *player = getPlayer(playerName);
+
+    prop->setOwner(player);
+
+    // set improvements/mortgaged status
+    if (improvements == -1) {
+      prop->mortgage();
+    } else if (improvements > 0) {
+      auto acBuild = dynamic_cast<AcademicBuilding*>(prop);
+      acBuild->setNumImprovements(improvements);
     }
   }
 }

@@ -79,7 +79,7 @@ void Game::loadGame(istream& gameIn) {
   } // loop to load players
 
   // Load board
-  // board.loadBoard(gameIn, players);
+  board.loadBoard(gameIn);
 }
 
 void Game::saveGame(ostream& gameOut) const {
