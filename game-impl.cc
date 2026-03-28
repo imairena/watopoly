@@ -36,7 +36,41 @@ void Game::nextPlayer(ostream& out) {
 }
 
 void Game::loadGame(istream& gameIn) {
-  // to do
+  // Load players
+  int numPlayers;
+  if (!(gameIn >> numPlayers)) {
+    cout << "Invalid file" << endl;
+    return;
+  }
+  
+  // Valid file
+  for (int i = 0; i < numPlayers; i++) {
+    string name;
+    char token;
+    int cups, money, position;
+    
+    // read player info
+    gameIn >> name >> token >> cups >> money >> position;
+    // add the player
+    addPlayer(name, token);
+    // Update player.s stats
+    Player& p = players.back(); // return last player we added by reference
+    p.setMoney(money);
+    for (int j = 0; j < cups; j++) { p.addCup(); }
+    p.setPosition(position);
+    // Edge case: Player was in Tims
+    if (position == 10) {
+      int inTims, turns;
+      gameIn >> inTims >> turns;
+
+      // Update player's status
+      p.setInTims(inTims == 1);
+      for (int k = 0; k < turns; ++k) { p.incrementTimsTurns(); }
+    }
+  } // loop to load players
+
+  // Load board
+  // board.loadBoard(gameIn, players);
 }
 
 void Game::saveGame(ostream& gameOut) const {
@@ -171,6 +205,11 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
   board.display();
   cout << currPlayer.getName() << " rolled " << die1
        << " + " << die2 << " = " << rollSum << "!" << endl;
+
+  // apply square action
+  Square* landedSquare = &board.getSquare(newPos); // getSquare returns by reference
+  cout << currPlayer.getName() << " landed on " << landedSquare->getName() << "." << endl;
+  landedSquare->landOn(&currPlayer);
      
   // check if passed collectOSAP (check >40 since =40 is handled by 
   // landOn method in CollectOSAP class)
@@ -179,16 +218,12 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
     currPlayer.receive(200);
   }
 
-    // apply square action
-    Square* landedSquare = &board.getSquare(newPos); // getSquare returns by reference
-    landedSquare->landOn(&currPlayer);
-    cout << currPlayer.getName() << " landed on " << landedSquare->getName() << "." << endl;
-    // if the square was a property and was not bought, need to auction,
-    // otherwise just move on with the turn
-    Property* landedProp = dynamic_cast<Property*>(landedSquare);
-    if (landedProp != nullptr && landedProp->getOwner() == nullptr) {
-      handleAuction(landedProp);
-    }
+  // if the square was a property and was not bought, need to auction,
+  // otherwise just move on with the turn
+  Property* landedProp = dynamic_cast<Property*>(landedSquare);
+  if (landedProp != nullptr && landedProp->getOwner() == nullptr) {
+    handleAuction(landedProp);
+  }
 
   // check if player rolled doubles
   if (die1 == die2) {

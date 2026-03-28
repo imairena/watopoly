@@ -77,6 +77,7 @@ public:
   void pay(int amount);
   void receive(int amount);
   int getMoney() const;
+  void setMoney(int amt);
   int getDebt() const;
   void setDebt(int amt);
   Player* getCreditor() const;

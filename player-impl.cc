@@ -44,6 +44,10 @@ int Player::getMoney() const {
   return money;
 }
 
+void Player::setMoney(int amt) {
+  money = amt;
+}
+
 int Player::getDebt() const {
   return debt;
 }
