@@ -7,111 +7,120 @@ using namespace std;
 
 // Constructor
 Player::Player(const string &name, char token)
-    : name{name}, token{token}, money{1500}, position{0}, timsCups{0},
-      inTims{false}, timsTurns{0}, isBankrupt{false} {}
+  : name{name}, token{token}, money{1500}, position{0}, timsCups{0},
+    inTims{false}, timsTurns{0}, isBankrupt{false} {}
 
 // Movement
 void Player::move(int steps) {
-    if (inTims) return; // cannot move if in Tims
+  if (inTims) return; // cannot move if in Tims
 
-    position = (position + steps) % 40;
+  position = (position + steps) % 40;
 
-    if (position < 0) {
-        position +=40; // handle negative movement
-    }
+  if (position < 0) {
+    position += 40; // handle negative movement
+  }
 }
 
 int Player::getPosition() const {
-    return position;
+  return position;
+}
+
+void Player::setPosition(const int pos) {
+  position = pos;
 }
 
 // Money
 void Player::pay(int amount) {
-    money -= amount;
+  money -= amount;
 }
 
 void Player::receive(int amount) {
-    money += amount;
+  money += amount;
 }
 
 int Player::getMoney() const {
-    return money;
+  return money;
 }
 
 // Properties
 void Player::addProperty(Property* p) {
-    properties.emplace_back(p);
+  properties.emplace_back(p);
 }
 
 void Player::removeProperty(Property* p) {
-    for (auto it = properties.begin(); it != properties.end(); ++it) {
-        if (*it == p) {
+  for (auto it = properties.begin(); it != properties.end(); ++it) {
+    if (*it == p) {
 	    properties.erase(it);
 	    return;
-	}
     }
+  }
 }
 
 const std::vector<Property*>& Player::getProperties() const {
-    return properties;
+  return properties;
 }
 
 // Tims Line
 void Player::sendToTims() {
-    inTims = true;
-    position = 10; // Tims location
-    timsTurns = 0;
+  inTims = true;
+  position = 10; // Tims location
+  timsTurns = 0;
 }
 
 void Player::leaveTims() {
-    inTims = false;
-    timsTurns = 0;
+  inTims = false;
+  timsTurns = 0;
+}
+
+void Player::setInTims(const bool inTims) {
+  if (inTims) sendToTims();
+  else leaveTims();
 }
 
 bool Player::getInTims() const {
-    return inTims;
+  return inTims;
 }
 
 int Player::getTimsTurns() const {
-    return timsTurns;
+  return timsTurns;
 }
 
 void Player::incrementTimsTurns() {
-    ++timsTurns;
+  ++timsTurns;
 }
 
 // Cups
 void Player::addCup() {
-    ++timsCups;
+  ++timsCups;
 }
 
 void Player::useCup() {
-    if (timsCups > 0) {
-        --timsCups;
-	leaveTims();
-    }
+  if (timsCups > 0) {
+    --timsCups;
+    leaveTims();
+  }
 }
 
 int Player::getCups() const {
-    return timsCups;
+  return timsCups;
 }
 
 // Bankruptcy
 void Player::declareBankrupt() {
-    isBankrupt = true;
+  isBankrupt = true;
 }
 
 bool Player::bankrupt() const {
-    return isBankrupt;
+  return isBankrupt;
 }
 
 // Info
 string Player::getName() const {
-    return name;
+  return name;
 }
 
 char Player::getToken() const {
-    return token;
+  return token;
 }
 
 int Player::getLastRoll() const {
@@ -124,12 +133,12 @@ void Player::setLastRoll(int roll) {
 
 // Assets
 void Player::assets() const {
-    cout << "Player: " << name << endl;
-    cout << "Money: $" << money << endl;
-    cout << "Position: " << position << endl;
-    cout << "Tims Cups: " << timsCups << endl;
-    cout << "Properties:" << name << endl;
-    for (auto p : properties) {
-        cout << " - Property at " << p << endl;
-    }
+  cout << "Player: " << name << endl;
+  cout << "Money: $" << money << endl;
+  cout << "Position: " << position << endl;
+  cout << "Tims Cups: " << timsCups << endl;
+  cout << "Properties:" << name << endl;
+  for (auto p : properties) {
+    cout << " - Property at " << p << endl;
+  }
 }

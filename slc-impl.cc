@@ -11,6 +11,8 @@ using namespace std;
 
 
 
+vector<unique_ptr<Card>> SLC::cards;
+
 vector<unique_ptr<Card>>& SLC::getCards() {
   return cards;
 }
