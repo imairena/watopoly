@@ -93,9 +93,10 @@ int main(int argc, char *argv[]) {
   }
   
   bool runGame = true;
-  while (runGame) {
+  while (runGame && game.getActivePlayers() > 1) {
     runGame = game.playTurn(flagTest);
   }
   
+  cout << "\nGAME OVER!! We have a winner!" << endl;
   return 0;
 }

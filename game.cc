@@ -29,6 +29,7 @@ export class Game {
 public:
   Game(std::istream& boardIn, std::istream& squaresIn,
        std::istream& cardsIn);
+  int getActivePlayers() const;
   bool playTurn(bool testMode);
   void nextPlayer(std::ostream& out = std::cout);
   void loadGame(std::istream& gameIn);

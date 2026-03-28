@@ -19,6 +19,15 @@ using namespace std;
 Game::Game(istream& boardIn, istream& squaresIn, istream& cardsIn):
   board{boardIn, squaresIn, cardsIn, &players} {}
 
+int Game::getActivePlayers() const {
+  int numActivePlayers = 0;
+  for (const auto& p : players) {
+    if (!p.bankrupt()) { numActivePlayers++; }
+  }
+  return numActivePlayers;
+}
+
+
 void Game::all() const {
   // loop thorough players using reference to avoid 
   // creating a copy of all players in each function call
