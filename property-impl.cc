@@ -114,6 +114,8 @@ void Property::landOn(Player* p) {
       cout << "." << endl;
     }
     else { // not enough to pay
+      cout << owner->getName() << " owns this property. You owe $" << amountOwed
+        << ", but only have $" << p->getMoney() << ". Use 'bankrupt' command to try to pay." << endl; 
       p->setDebt(amountOwed);
       p->setCreditor(owner);
     }
