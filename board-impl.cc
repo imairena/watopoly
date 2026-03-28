@@ -132,24 +132,26 @@ Board::Board(istream& boardIn, istream& squaresIn,
     squares.push_back(move(squareptr));
     boardString.replace(location, squareString1.length(), squareString1);
     boardString.replace(location + lineWidth, squareString2.length(), squareString2);
-
-    // monopolyBlockSizes depend on other entries in data, so
-    // they must be set after initialization
-    for (auto& squareptr : squares) {  // set blockSize of all academic buildings
-      if (auto acBuild = dynamic_cast<AcademicBuilding*>(squareptr.get())) {
-        acBuild->setBlockSize(monopolyBlockCounts[acBuild->getMonopolyBlock()]);
-      }
-    }
-
-    // create cards for SLC and NeedlesHall squares
-    createCards(slcptr, needleshallptr, cardsIn);
-
-    // sort squares by position
-    sort(squares.begin(), squares.end(),
-         [](const std::unique_ptr<Square>& s1, const std::unique_ptr<Square>& s2) {
-           return s1->getPosition() < s2->getPosition();
-         });
   }
+  
+  // monopolyBlockSizes depend on other entries in data, so
+  // they must be set after initialization
+  for (auto& squareptr : squares) {  // set blockSize of all academic buildings
+    if (auto acBuild = dynamic_cast<AcademicBuilding*>(squareptr.get())) {
+      acBuild->setBlockSize(monopolyBlockCounts[acBuild->getMonopolyBlock()]);
+    }
+  }
+
+  // create cards for SLC and NeedlesHall squares
+  createCards(slcptr, needleshallptr, cardsIn);
+  if (slcptr) slcptr->shuffleCards();
+  if (needleshallptr) needleshallptr->shuffleCards();
+
+  // sort squares by position
+  sort(squares.begin(), squares.end(),
+       [](const std::unique_ptr<Square>& s1, const std::unique_ptr<Square>& s2) {
+         return s1->getPosition() < s2->getPosition();
+       });
 }
 
 // prints a text display of the current board state

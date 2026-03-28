@@ -8,6 +8,7 @@ import <memory>;
 
 import playerSquareProperty;
 import card;
+import tools;
 
 using namespace std;
 
@@ -20,9 +21,14 @@ void CardSquare::landOn(Player* p) {
   vector<unique_ptr<Card>>& cards = getCards();
   currentCard = (currentCard + 1) % cards.size();
   if (currentCard == 0) {
-    cout << "End of " << getName() << " deck." << endl;
-    cout << "Now reshuffling deck." << endl << endl;
-    // ============================================================= add shuffle here!!!
+    cout << "\nEnd of " << getName() << " deck." << endl;
+    cout << "Now reshuffling cards." << endl << endl;
+    shuffleCards();
   }
   cards[currentCard]->apply(p);
+}
+
+void CardSquare::shuffleCards() {
+  vector<unique_ptr<Card>>& cards = getCards();
+  shuffleVector(cards);
 }
