@@ -15,7 +15,7 @@ export class Square {
   std::string name;
   int position;
 
-  public:
+public:
   Square(std::string name, int position);
   virtual void landOn(Player* p) = 0;
   virtual ~Square() = default;
@@ -31,7 +31,7 @@ export class Property : public Square {
   int cost;
   bool mortgaged;
 
-  public:
+public:
   Property(std::string name, int position, int cost);
   virtual int getFee(Player* p) = 0;
   virtual ~Property() = default;
@@ -39,6 +39,7 @@ export class Property : public Square {
   void buyProperty(Player* p);
   void mortgage();
   void unmortgage();
+  void auction();
   void setOwner(Player* p);
   void landOn(Player* p) override;
 
@@ -51,59 +52,59 @@ export class Property : public Square {
 
 // Player defined with Property
 export class Player {
-    std::string name;
-    char token;
-    int money;
-    int position;
-    int timsCups;
-    bool inTims;
-    int timsTurns;
-    std::vector<Property*> properties;
-    bool isBankrupt;
-    int lastRoll;
+  std::string name;
+  char token;
+  int money;
+  int position;
+  int timsCups;
+  bool inTims;
+  int timsTurns;
+  std::vector<Property*> properties;
+  bool isBankrupt;
+  int lastRoll;
 
- public:
-    // Constructor
-    Player(const std::string &name, char token);
+public:
+  // Constructor
+  Player(const std::string &name, char token);
 
-    // Movement
-    void move(int steps);
-    int getPosition() const;
-    void setPosition(int pos);
+  // Movement
+  void move(int steps);
+  int getPosition() const;
+  void setPosition(const int pos);
 
-    // Money
-    void pay(int amount);
-    void receive(int amount);
-    int getMoney() const;
+  // Money
+  void pay(int amount);
+  void receive(int amount);
+  int getMoney() const;
 
-    // Properties
-    void addProperty(Property* p);
-    void removeProperty(Property* p);
-    const std::vector<Property*>& getProperties() const;
+  // Properties
+  void addProperty(Property* p);
+  void removeProperty(Property* p);
+  const std::vector<Property*>& getProperties() const;
 
-    // Tims Line
-    void sendToTims();
-    void leaveTims();
-    bool getInTims() const;
-    void setInTims(bool inTims);
-    int getTimsTurns() const;
-    void incrementTimsTurns();
+  // Tims Line
+  void sendToTims();
+  void leaveTims();
+  bool getInTims() const;
+  void setInTims(const bool inTims);
+  int getTimsTurns() const;
+  void incrementTimsTurns();
 
-    // Cups
-    void addCup();
-    void useCup();
-    int getCups() const;
+  // Cups
+  void addCup();
+  void useCup();
+  int getCups() const;
 
-    // Bankruptcy
-    void declareBankrupt();
-    bool bankrupt() const;
+  // Bankruptcy
+  void declareBankrupt();
+  bool bankrupt() const;
 
-    // Info
-    std::string getName() const;
-    char getToken() const;
-    int getLastRoll() const;
-    void setLastRoll(int roll);
+  // Info
+  std::string getName() const;
+  char getToken() const;
+  int getLastRoll() const;
+  void setLastRoll(int roll);
 
-    // Assets display
-    void assets() const;
+  // Assets display
+  void assets() const;
 };

@@ -11,6 +11,8 @@ using namespace std;
 
 
 
+vector<unique_ptr<Card>> NeedlesHall::cards;
+
 vector<unique_ptr<Card>>& NeedlesHall::getCards() {
   return cards;
 }
