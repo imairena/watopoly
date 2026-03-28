@@ -50,10 +50,6 @@ void Property::mortgage() {
 
 } // mortgage
 
-void Property::auction() {
-  // to do
-} // auction
-
 void Property::unmortgage() {
   if (owner == nullptr) {
     cout << "Cannot unmortgage unowned properties." << endl;
@@ -111,10 +107,15 @@ void Property::landOn(Player* p) {
   }
   else { // Need to pay owner
     int amountOwed = getFee(p);
-    p->pay(amountOwed);
-    owner->receive(amountOwed);
-
-    cout << owner->getName() << " owns this property. You owe $" << amountOwed;
-    cout << "." << endl;
+    if (p->getMoney() >= amountOwed) { // check if enough money to pay
+      p->pay(amountOwed);
+      owner->receive(amountOwed);
+      cout << owner->getName() << " owns this property. You paid $" << amountOwed;
+      cout << "." << endl;
+    }
+    else { // not enough to pay
+      p->setDebt(amountOwed);
+      p->setCreditor(owner);
+    }
   }
 } // landOn
