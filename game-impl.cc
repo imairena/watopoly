@@ -46,20 +46,27 @@ void Game::nextPlayer(ostream& out) {
 
 void Game::loadGame(istream& gameIn) {
   // Load players
+  string numPlayersString;
   int numPlayers;
-  if (!(gameIn >> numPlayers)) {
+  
+  if (!getline(gameIn, numPlayersString)) {
     cout << "Invalid file" << endl;
     return;
   }
+  stringstream ss{numPlayersString};
+  ss >> numPlayers;
   
   // Valid file
   for (int i = 0; i < numPlayers; i++) {
-    string name;
+    string line, name;
     char token;
     int cups, money, position;
+
+    getline(gameIn, line);
+    stringstream ss{line};
     
     // read player info
-    gameIn >> name >> token >> cups >> money >> position;
+    ss >> name >> token >> cups >> money >> position;
     // add the player
     addPlayer(name, token);
     // Update player.s stats
@@ -70,7 +77,7 @@ void Game::loadGame(istream& gameIn) {
     // Edge case: Player was in Tims
     if (position == 10) {
       int inTims, turns;
-      gameIn >> inTims >> turns;
+      ss >> inTims >> turns;
 
       // Update player's status
       p.setInTims(inTims == 1);

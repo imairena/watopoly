@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
       flagTest = true;
       ++i;
     } else {
-      cout << "Error: Unknown flag " << arg;
+      cout << "Error: Unknown flag " << arg << endl;
       return 0;
     }
   }
