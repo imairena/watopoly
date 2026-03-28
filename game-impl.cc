@@ -101,8 +101,8 @@ bool Game::playTurn(bool testMode) {
       cout << "Game saved successfully to " << filename << endl;
     } // if save
     else if (command == "bankrupt") {
-      handleBankrupt(currPlayer);
-      return true; // turn is over if player declares bankruptcy
+      bool isBankrupt = handleBankrupt(currPlayer, currPlayer.getDebt(), currPlayer.getCreditor());
+      if (isBankrupt) return; // turn is over if player declares bankruptcy
     }
     else if (command == "trade") {
       handleTrade(currPlayer);
