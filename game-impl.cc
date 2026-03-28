@@ -16,7 +16,7 @@ using namespace std;
 
 
 Game::Game(istream& boardIn, istream& squaresIn, istream& cardsIn):
-  board{boardIn, squaresIn, cardsIn} {}
+  board{boardIn, squaresIn, cardsIn, &players} {}
 
 void Game::all() const {
   // loop thorough players using reference to avoid 
@@ -72,6 +72,7 @@ bool Game::playTurn(bool testMode) {
   string command;
   bool hasRolled = false;
 
+  board.display();
   cout << "Player " << currPlayer.getName() << ", enter command:" << endl;
   while (cin >> command) {
     cout << endl;
@@ -134,7 +135,7 @@ bool Game::playTurn(bool testMode) {
 
 
 // HELPERS
-void Game::handleRoll(Player& currPlayer, bool hasRolled, bool testMode) {
+void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
   if (hasRolled) {
     cout << "You already rolled this turn." << endl;
     return;
@@ -157,18 +158,18 @@ void Game::handleRoll(Player& currPlayer, bool hasRolled, bool testMode) {
     die1 = generateRandom(1, 6);
     die2 = generateRandom(1, 6);
   }
-
-  board.display();
   
   int rollSum = die1 + die2;
-  cout << currPlayer.getName() << " rolled " << die1
-       << " + " << die2 << " = " << rollSum << "!" << endl;
       
   // update player
   currPlayer.setLastRoll(rollSum);
   int oldPos = currPlayer.getPosition();
   int newPos = (oldPos + rollSum) % 40;
   currPlayer.setPosition(newPos);
+  
+  board.display();
+  cout << currPlayer.getName() << " rolled " << die1
+       << " + " << die2 << " = " << rollSum << "!" << endl;
      
   // check if passed collectOSAP (check >40 since =40 is handled by 
   // landOn method in CollectOSAP class)

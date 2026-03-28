@@ -42,7 +42,7 @@ int Board::squareLocation(const int position) const {
 
 // ctor
 Board::Board(istream& boardIn, istream& squaresIn,
-             std::istream& cardsIn) {
+             std::istream& cardsIn, vector<Player>* players): players{players} {
   // read board.txt (boardIn) and store in boardString
   // create Squares based on squares.txt
   // update boardString during each square creation so it has the name there
@@ -154,7 +154,8 @@ Board::Board(istream& boardIn, istream& squaresIn,
 
 // prints a text display of the current board state
 void Board::display(ostream& out) {
-  // modify boardString with players/improvements
+  // modify copy of boardString with players/improvements
+  string boardStringCopy = boardString;
   string improvementsString;
   int numImprovements, location;
   for (auto& squareptr : squares) {  // display improvements
@@ -162,19 +163,21 @@ void Board::display(ostream& out) {
       numImprovements = acBuild->getNumImprovements();
       improvementsString = string("I") * numImprovements;
       location = squareLocation(acBuild->getPosition());
-      boardString.replace(location + lineWidth, numImprovements, improvementsString);
+      boardStringCopy.replace(location + lineWidth, numImprovements, improvementsString);
     }
   }
   int playerPosition;
   char playerToken;
   int playerOffset = 0;  // ensures players can't be printed on top of each other
-  for (auto playerptr : players) {  // display player positions
-    playerPosition = playerptr->getPosition();
-    playerToken = playerptr->getToken();
-    int boardPosition = playerPosition + 3 * lineWidth + playerOffset;
-    boardString.replace(boardPosition, 1, 1, playerToken);
+  for (auto& playerptr : *players) {  // display player positions
+    playerPosition = squareLocation(playerptr.getPosition());
+    playerPosition += 3 * lineWidth + playerOffset;
+    playerToken = playerptr.getToken();
+    // update boardString
+    boardStringCopy.replace(playerPosition, 1, 1, playerToken);
+    ++playerOffset;
   }
-  out << boardString;  // no endl because boardString already ends with "\n"
+  out << boardStringCopy;  // no endl because boardString already ends with "\n"
 }
 
 // Accessors

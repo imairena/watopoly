@@ -14,7 +14,7 @@ import needleshall;
 export class Board {
   std::vector<std::unique_ptr<Square>> squares;  // owns Squares
   std::string boardString;
-  std::vector<Player*> players;  // does not own Players
+  std::vector<Player>* players;  // does not own Players
 
   const int lineWidth = 90;
   const int rowHeight = 5 * lineWidth;
@@ -30,9 +30,10 @@ export class Board {
 
 public:
   Board(std::istream& boardIn, std::istream& squaresIn,
-        std::istream& cardsIn);
+        std::istream& cardsIn, std::vector<Player>* players);
   void display(std::ostream& out = std::cout);
+  void saveBoard(std::ostream& gameOut) const;
+  // Accessors
   Square& getSquare(const int i) const;
   Property* getProperty(const std::string propName) const;
-  void saveBoard(std::ostream& gameOut) const;
 };
