@@ -140,12 +140,19 @@ bool Game::playTurn(bool testMode) {
   while (cin >> command) {
     cout << endl;
     if (command == "roll") {
-      handleRoll(currPlayer, hasRolled, testMode);
+      if (currPlayer.getDebt() > 0) {
+        cout << "You must pay your debt before rolling!" << endl;
+      } else {
+        handleRoll(currPlayer, hasRolled, testMode);
+      }
     } // if roll
     else if (command == "next") {
-      if (!hasRolled) {
+      if (currPlayer.getDebt() > 0) {
+        cout << "You must pay your debt before moving to the next player!" << endl;
+      }
+      else if (!hasRolled) {
         cout << "You must roll before moving to the next player!" << endl;
-      } else {
+      }	else {
         currPlayer.setNumRolls(0);
 	nextPlayer(cout);
         return true;
@@ -544,6 +551,9 @@ bool Game::handleBankrupt(Player& currPlayer, int amountOwed = 0, Player* credit
 
   // Successfully raised enough money
   if (!declaringBankruptcy && currPlayer.getMoney() >= amountOwed) {
+    currPlayer.pay(amountOwed);
+    currPlayer.setDebt(0);
+    if (creditor) creditor->receive(amountOwed);
     cout << "You have successfully recovered from debt!" << endl;
     return false;
   }
