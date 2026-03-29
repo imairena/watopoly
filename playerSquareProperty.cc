@@ -58,6 +58,7 @@ export class Player {
   int timsCups;
   bool inTims;
   int timsTurns;
+  int numRolls;
   std::vector<Property*> properties;
   bool isBankrupt;
   int lastRoll;
@@ -87,6 +88,11 @@ public:
   void addProperty(Property* p);
   void removeProperty(Property* p);
   const std::vector<Property*>& getProperties() const;
+
+  // Turns
+  void incrementNumRolls();
+  int getNumRolls() const;
+  void setNumRolls(int num);
 
   // Tims Line
   void sendToTims();

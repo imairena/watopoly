@@ -8,7 +8,7 @@ using namespace std;
 // Constructor
 Player::Player(const string &name, char token)
   : name{name}, token{token}, money{1500}, position{0}, timsCups{0},
-    inTims{false}, timsTurns{0}, isBankrupt{false}, lastRoll{0},
+    inTims{false}, timsTurns{0}, numRolls{0}, isBankrupt{false}, lastRoll{0},
     debt{0}, creditor{nullptr}
 {}
 
@@ -125,6 +125,19 @@ void Player::useCup() {
 
 int Player::getCups() const {
   return timsCups;
+}
+
+// Number of Rolls
+void Player::incrementNumRolls() {
+  ++numRolls;
+}
+
+int Player::getNumRolls() const {
+  return numRolls;
+}
+
+void Player::setNumRolls(int num) {
+  numRolls = num;
 }
 
 // Bankruptcy

@@ -146,7 +146,8 @@ bool Game::playTurn(bool testMode) {
       if (!hasRolled) {
         cout << "You must roll before moving to the next player!" << endl;
       } else {
-        nextPlayer(cout);
+        currPlayer.setNumRolls(0);
+	nextPlayer(cout);
         return true;
       }
     } // if next
@@ -231,11 +232,17 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
   }
   
   int rollSum = die1 + die2;
-      
+  currPlayer.incrementNumRolls();
+  
   // update player
   currPlayer.setLastRoll(rollSum);
   int oldPos = currPlayer.getPosition();
-  int newPos = (oldPos + rollSum) % 40;
+  
+  // Can't roll more than 2 doubles
+  bool triple_double = (die1 == die2 && currPlayer.getNumRolls() >= 3) ? true : false;
+  int new_position = triple_double ? 30 : oldPos + rollSum; // Go to Tims (pos 30) if you rolled 3 doubles
+
+  int newPos = (new_position) % 40;
   currPlayer.setPosition(newPos);
   
   board.display();
@@ -244,14 +251,20 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
 
   // check if player rolled doubles
   if (die1 == die2) {
-    cout << "You rolled doubles! You get to roll again this turn." << endl << endl;
+    if (currPlayer.getNumRolls() < 3) {
+      cout << "You rolled doubles! You get to roll again this turn." << endl << endl;
+    }
+    else {
+      cout << "Oh No! You just rolled your third triple." << endl;
+      hasRolled = true;
+    }
   } else {
     hasRolled = true;
   }
      
   // check if passed collectOSAP (check >40 since =40 is handled by 
   // landOn method in CollectOSAP class)
-  if (oldPos + rollSum > 40 && newPos > 0) {
+  if (new_position > 40 && newPos > 0) {
     cout << currPlayer.getName() << " collected $200 from OSAP!" << endl << endl;
     currPlayer.receive(200);
   }
