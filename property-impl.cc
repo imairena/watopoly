@@ -73,6 +73,10 @@ void Property::landOn(Player* p) {
   // if property is unowned, give choice to buy
   if (owner == nullptr) {
     cout << getName() << " is unowned.";
+    if (p->getMoney() < cost) {
+      cout << "You do not have enough money to buy this property." << endl;
+      return;
+    }
     cout << " Would you like to buy it for $" << cost << "?";
     cout << " (y/n)" << endl;
     
@@ -86,10 +90,9 @@ void Property::landOn(Player* p) {
       }
 
       if (choice == 'y' || choice == 'Y') {
-        validChoice = true;
+	validChoice = true;
         buyProperty(p);
         return;
-
       } else if (choice == 'n' || choice == 'N') {
         validChoice = true;
         return;
