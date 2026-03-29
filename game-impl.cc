@@ -689,11 +689,144 @@ void Game::handleAuction(Property* prop) {
 } // handleAuction
 
 void Game::handleTrade(Player& currPlayer) {
+  string otherPlayerName;
+  Player *otherPlayer;
+
+  // get other player
+  while (true) {
+    cout << "Which player would you like to trade with?" << endl;
+    cin >> otherPlayerName;
+    cout << endl;
+    otherPlayer = board.getPlayer(otherPlayerName);
+    if (!otherPlayer) {
+      cout << "There is no player named " << otherPlayerName << "." << endl
+           << "Please try again." << endl;
+    } else if (&currPlayer == otherPlayer) {
+      cout << "You cannot trade with yourself. Try again." << endl;
+    }
+    else break;
+  }
+
+  // determine the type of trade
+  string receive, give;
+  int intReceive, intGive;
+  Property *propReceive = nullptr;
+  Property *propGive = nullptr;
+
+  // determine what to give
+  while (true) {
+    cout << "Please enter the amount of money/property you would like to GIVE:" << endl;
+    cin >> give;
+    cout << endl;
+    stringstream ss{give};
+
+    // give is an amount of money
+    if (ss >> intGive) {
+      if (intGive < 0) {
+        cout << "You cannot trade a negative amount of money. try again." << endl;
+        continue;
+      }
+      if (intGive > currPlayer.getMoney()) {
+        cout << "You do not have enough money to make this trade. Try again." << endl;
+        continue;
+      }
+      break;
+    }
+    // give is a property
+    propGive = board.getProperty(give);
+    if (!propGive) {
+      cout << "Invalid property/amount of money. Try again." << endl;
+      continue;
+    }
+    if (propGive->getOwner() != &currPlayer) {
+      cout << "You do not own this property. Try again." << endl;
+      continue;
+    }
+    break;
+  }
+
+  // determine what to receive
+  while (true) {
+    cout << "Please enter the amount of money/property you would like to RECEIVE:" << endl;
+    cin >> receive;
+    cout << endl;
+    stringstream ss{receive};
+
+    // receive is an amount of money
+    if (ss >> intReceive) {
+      if (intReceive < 0) {
+        cout << "You cannot trade a negative amount of money. try again." << endl;
+        continue;
+      }
+      if (intReceive > otherPlayer->getMoney()) {
+        cout << otherPlayer->getName()
+             << " does not have enough money to make this trade. Try again." << endl;
+        continue;
+      }
+      break;
+    }
+    // give is a property
+    propReceive = board.getProperty(receive);
+    if (!propReceive) {
+      cout << "Invalid property/amount of money. Try again." << endl;
+      continue;
+    }
+    if (propReceive->getOwner() != otherPlayer) {
+      cout << otherPlayer->getName()
+           << " does not own this property. Try again." << endl;
+      continue;
+    }
+    break;
+  }
+
+  // can't trade money for money
+  if (!propGive && !propReceive) {
+    cout << "You may not trade money for money. Aborting trade." << endl << endl;
+    return;
+  }
+
+  // display trade details
+  cout << "Trade summary:" << endl << "Player " << currPlayer.getName()
+       << " would GIVE " << give << " to player " << otherPlayer->getName() << endl
+       << "and RECEIVE " << receive << " in return." << endl << endl;
   
-  // ============================================================================ to do
+  // get response
+  string response;
+  while (true) {
+    cout << "Player " << otherPlayer->getName()
+         << ", please enter your response to the proposed trade:" << endl
+         << "(\"accept\" or \"reject\")" << endl;
+    cin >> response;
+    cout << endl;
+    if (response == "accept") break;
+    else if (response == "reject") {
+      cout << "Trade has been rejected. Player " << currPlayer.getName()
+           << " may continue their turn as usual." << endl << endl;
+      return;
+    } else {
+      cout << "Invalid response. Try again." << endl;
+      continue;
+    }
+  }
   
-  cout << "Trading is unfortunately not available at the moment." << endl;
-}
+  // complete give part of trade
+  if (propGive) {
+    propGive->setOwner(otherPlayer);
+  } else {
+    currPlayer.pay(intGive);
+    otherPlayer->receive(intGive);
+  }
+
+  // complete receive part of trade
+  if (propReceive) {
+    propReceive->setOwner(&currPlayer);
+  } else {
+    currPlayer.receive(intReceive);
+    otherPlayer->pay(intReceive);
+  }
+
+  cout << "Trade completed successfully!" << endl << endl;
+} // handleTrade
 
 void Game::handleImprove(Player& currPlayer) {
   string propName, action;

@@ -176,6 +176,7 @@ void Player::assets() const {
   for (auto p : properties) {
     cout << " - " << p->getName();
     if (p->isMortgaged()) { cout << " (Mortgaged)"; }
-    cout << endl << endl;
+    cout << endl;
   }
+  cout << endl;
 }
