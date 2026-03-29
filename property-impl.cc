@@ -12,6 +12,7 @@ Property::Property(string name, int position, int cost) :
 Player* Property::getOwner() const { return owner; }
 int Property::getCost() const { return cost; }
 bool Property::isMortgaged() const { return mortgaged; }
+int Property::getNumImprovements() const { return 0; }
 
 void Property::setOwner(Player* p) { 
   if (owner != nullptr) { // remove property from old owner
@@ -124,3 +125,13 @@ void Property::landOn(Player* p) {
     }
   }
 } // landOn
+
+// determines if the given player may trade this property
+bool Property::tradeable(Player *p) const {
+  if (p != getOwner()) {
+    cout << "Player " << p->getName()
+         << " does not own this property. Try again." << endl;
+    return false;
+  }
+  else return true;
+}

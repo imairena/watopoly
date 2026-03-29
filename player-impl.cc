@@ -3,6 +3,8 @@ module playerSquareProperty;
 import <iostream>;
 import <string>;
 
+import tools;
+
 using namespace std;
 
 // Constructor
@@ -175,8 +177,8 @@ void Player::assets() const {
   cout << "Properties: " << endl;
   for (auto p : properties) {
     cout << " - " << p->getName();
-    if (p->isMortgaged()) { cout << " (Mortgaged)"; }
-    cout << endl;
+    if (p->isMortgaged()) cout << " (Mortgaged)";
+    cout << " " << string("I") * p->getNumImprovements() << endl;
   }
   cout << endl;
 }

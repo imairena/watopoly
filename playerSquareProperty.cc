@@ -41,10 +41,12 @@ public:
   void unmortgage();
   void setOwner(Player* p);
   void landOn(Player* p) override;
+  virtual bool tradeable(Player *p) const;
 
   Player* getOwner() const;
   virtual int getCost() const;
   bool isMortgaged() const;
+  virtual int getNumImprovements() const;
 };
 
 

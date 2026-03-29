@@ -1,7 +1,13 @@
 module academicbuilding;
+
 import <string>;
+import <iostream>;
+
 import playerSquareProperty;
+
 using namespace std;
+
+
 
 AcademicBuilding::AcademicBuilding
   (string name, int position, int cost,
@@ -52,7 +58,7 @@ void AcademicBuilding::addImprovement() {
 void AcademicBuilding::removeImprovement() {
   if (numImprovements > 0) numImprovements--;
 }
-bool AcademicBuilding::hasMonopoly() {
+bool AcademicBuilding::hasMonopoly() const {
   if (getOwner() == nullptr) return false;
   int numSameBlock = 0;
   // Loop through properties
@@ -64,3 +70,25 @@ bool AcademicBuilding::hasMonopoly() {
   } // loop
   return numSameBlock == blockSize;
 } // hasMonopoly
+
+// determines if the given player may trade this property
+bool AcademicBuilding::tradeable(Player *p) const {
+  if (p != getOwner()) {
+    cout << "Player " << p->getName()
+         << " does not own this property. Try again." << endl;
+    return false;
+  }
+  if (!hasMonopoly()) {
+    return true;
+  }
+  for (Property* prop : p->getProperties()) {
+    AcademicBuilding* acBuild = dynamic_cast<AcademicBuilding*>(prop);
+    if (acBuild && acBuild->getMonopolyBlock() == monopolyBlock
+        && acBuild->getNumImprovements() != 0) {
+      cout << "You may not trade a property in a Monopoly block if at least one" << endl
+           << "property in the block has an improvement. Try again." << endl;
+      return false;
+    }
+  }
+  return true;
+}

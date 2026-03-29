@@ -738,10 +738,7 @@ void Game::handleTrade(Player& currPlayer) {
       cout << "Invalid property/amount of money. Try again." << endl;
       continue;
     }
-    if (propGive->getOwner() != &currPlayer) {
-      cout << "You do not own this property. Try again." << endl;
-      continue;
-    }
+    if (!(propGive->tradeable(&currPlayer))) continue;
     break;
   }
 
@@ -771,11 +768,7 @@ void Game::handleTrade(Player& currPlayer) {
       cout << "Invalid property/amount of money. Try again." << endl;
       continue;
     }
-    if (propReceive->getOwner() != otherPlayer) {
-      cout << otherPlayer->getName()
-           << " does not own this property. Try again." << endl;
-      continue;
-    }
+    if (!(propReceive->tradeable(otherPlayer))) continue;
     break;
   }
 
@@ -846,7 +839,7 @@ void Game::handleImprove(Player& currPlayer) {
       cout << "You can only improve academic buildings." << endl;
     }
     // check if monopoly is owned
-    else if (!ab->hasMonopoly()) {
+    else if (!(ab->hasMonopoly())) {
       cout << "Need monopoly to buy/sell improvements for " << propName << "." << endl;
     }
     else if (action == "buy") {
