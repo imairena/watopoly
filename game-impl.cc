@@ -124,6 +124,17 @@ bool Game::playTurn(bool testMode) {
   bool hasRolled = false;
 
   board.display();
+  cout << endl;
+
+  if (currPlayer.getInTims()) {
+    handleTimsTurn(currPlayer);
+    // check if player still in Tims after handleTimsTurn
+    if (!currPlayer.getInTims()) {
+      cout << endl << "Now out of Tims, you may "
+           << "continue your turn as usual." << endl;
+    } else hasRolled = true;
+  }
+  
   cout << "Player " << currPlayer.getName() << ", enter command:" << endl
        << "(Type \"help\" to see available commands.)" << endl;
   while (cin >> command) {
@@ -200,10 +211,6 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
     return;
   }
 
-  if (currPlayer.getInTims()) {
-    handleTimsTurn(currPlayer);
-  }
-
   int die1, die2;
   if (testMode) {
     cout << "What two (non-negative) numbers would you like to roll?" << endl;
@@ -224,18 +231,6 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
   }
   
   int rollSum = die1 + die2;
-
-  if (currPlayer.getInTims()) {
-    if (die1 == die2) {
-      cout << "You rolled doubles and left Tims!." << endl;
-    } else {
-      cout << "You did not roll doubles." << endl;
-      if (currPlayer.getTimsTurns() < 3) {
-        return;
-      }
-      handleTimsTurn(currPlayer);
-    }
-  }
       
   // update player
   currPlayer.setLastRoll(rollSum);
@@ -247,6 +242,19 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
   cout << currPlayer.getName() << " rolled " << die1
        << " + " << die2 << " = " << rollSum << "!" << endl;
 
+  // check if player rolled doubles
+  if (die1 == die2) {
+    if (!currPlayer.getInTims()) {
+      cout << "You rolled doubles! You get to roll again this turn." << endl << endl;
+    } else {
+      currPlayer.leaveTims();
+      hasRolled = true;
+    }
+  } 
+  else {
+    hasRolled = true;
+  }
+  
   // apply square action
   Square* landedSquare = &board.getSquare(newPos); // getSquare returns by reference
   cout << currPlayer.getName() << " landed on " << landedSquare->getName() << "." << endl;
@@ -287,19 +295,6 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
   if (landedProp != nullptr && landedProp->getOwner() == nullptr) {
     handleAuction(landedProp);
   }
-
-  // check if player rolled doubles
-  if (die1 == die2) {
-    if (!currPlayer.getInTims()) {
-      cout << "You rolled doubles! You get to roll again." << endl;
-    } else {
-      currPlayer.leaveTims();
-      hasRolled = true;
-    }
-  } 
-  else {
-    hasRolled = true;
-  }
 } // handleRoll
 
 void Game::handleTimsTurn(Player& currPlayer) {
@@ -307,8 +302,16 @@ void Game::handleTimsTurn(Player& currPlayer) {
   cout << "Turns in Tims: " << currPlayer.getTimsTurns() << "/3" << endl;
   cout << "Current Tims cup(s): " << currPlayer.getCups() << endl;
   
-  if (currPlayer.getTimsTurns() > 3) {
+  if (currPlayer.getTimsTurns() >= 3) {
     cout << "This is your third turn in Tims. You must leave." << endl;
+
+    if (currPlayer.getCups() == 0 && currPlayer.getMoney() < 50) {
+      cout << "Unfortunately, you do not have the means necessary to leave." << endl
+           << "Therefore, you have gone bankrupt and lost the game." << endl;
+      currPlayer.declareBankrupt();
+      return;
+    }
+    
     while (true) {
       cout << "Choose an option:" << endl;
       cout << "1. Pay $50" << endl;
@@ -375,7 +378,20 @@ void Game::handleTimsTurn(Player& currPlayer) {
     
     // Try to roll for doubles
     if (choice == 1) {
-      currPlayer.incrementTimsTurns();
+
+      int die1 = generateRandom(1, 6);
+      int die2 = generateRandom(1, 6);
+
+      if (die1 == die2) {
+        cout << "You rolled doubles (" << die1
+             << " and " << die2 << ") and left Tims!" << endl;
+        currPlayer.leaveTims();
+      } else {
+        cout << "You did not roll doubles. (" << die1
+             << " and " << die2 << ")" << endl;
+        currPlayer.incrementTimsTurns();
+      }
+      
       return;
     }
   }
