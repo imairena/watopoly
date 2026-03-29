@@ -2,6 +2,8 @@ import <iostream>;
 import <string>;
 import <fstream>;
 import <sstream>;
+import <algorithm>;
+import <vector>;
 
 import game;
 
@@ -58,7 +60,9 @@ int main(int argc, char *argv[]) {
     }
     
     // add players
-    string validTokens = "GBDPS$LT";
+    vector<char> validTokens = {'G', 'B', 'D', 'P', 'S', '$', 'L', 'T'};
+    vector<string> takenNames;
+    vector<char> takenTokens;
     for (int i = 0; i < numPlayers; ++i) {
       string name;
       string tokenString;
@@ -70,9 +74,17 @@ int main(int argc, char *argv[]) {
       while (true) {
         cin >> name;
         cout << endl;
-        if (name != "BANK") break;
-        else cout << "Invalid name. Try again." << endl
-                  << "(Note, name may not be \"BANK\")" << endl;
+        if (name == "BANK") {
+          cout << "Invalid name. Try again." << endl
+               << "(Note, name may not be \"BANK\")" << endl;
+        }
+        else if (find(takenNames.begin(), takenNames.end(), name) != takenNames.end()) {
+          cout << "That name has already been taken. Try again." << endl;
+        }
+        else {
+          takenNames.push_back(name);
+          break;
+        }
       }
       
       // get token
@@ -82,10 +94,18 @@ int main(int argc, char *argv[]) {
         cin >> tokenString;
         cout << endl;
         istringstream ss{tokenString};
-        if (tokenString.length() == 1 && ss >> token
-            && validTokens.find(token) != string::npos) break;
-        else cout << "Invalid token. Try again." << endl
-                  << "(Note, token must be one of G, B, D, P, S, $, L, or T)" << endl;
+        if (tokenString.length() != 1 || !(ss >> token)
+            || find(validTokens.begin(), validTokens.end(), token) == validTokens.end()) {
+          cout << "Invalid token. Try again." << endl
+               << "(Note, token must be one of G, B, D, P, S, $, L, or T)" << endl;
+        }
+        else if (find(takenTokens.begin(), takenTokens.end(), token) != takenTokens.end()) {
+          cout << "That token has already been taken. Try again." << endl;
+        }
+        else {
+          takenTokens.push_back(token);
+          break;
+        }
       }
       
       game.addPlayer(name, token);
@@ -97,6 +117,5 @@ int main(int argc, char *argv[]) {
     runGame = game.playTurn(flagTest);
   }
   
-  cout << "\nGAME OVER!! We have a winner!" << endl;
   return 0;
 }
