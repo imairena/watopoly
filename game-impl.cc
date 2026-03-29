@@ -593,7 +593,7 @@ void Game::handleAuction(Property* prop) {
       cout << currBidder->getName() << " has left the auction." << endl;
       activePlayers.erase(activePlayers.begin() + currBidderIdx); // Note players are shifted
 
-      // if deleted last player, then need to reset index
+      // if removed last player, then need to reset index
       // Note: This comparison is why currBidderIdx is size_t
       if (currBidderIdx >= activePlayers.size()) { currBidderIdx = 0; } 
     }

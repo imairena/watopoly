@@ -17,10 +17,9 @@ export class Game {
   const int maxCups = 4;
 
   // helper methods (private)
-  void handleRoll(Player& currPlayer, bool& hasRolled, bool testMode);
   void handleTimsTurn(Player& currPlayer);
+  void handleRoll(Player& currPlayer, bool& hasRolled, bool testMode = false);
   bool handleBankrupt(Player& currPlayer, int amountOwed, Player* creditor);
-  void handleRoll(Player& currPlayer, bool& hasRolled);
   void handleAuction(Property* prop);
   void handleTrade(Player& currPlayer);
   void handleMortgage(Player& currPlayer);

@@ -5,6 +5,11 @@
 gcm.cache/
 *.tmp
 
-# emacs backup files
+# emacs backup/temp files
 *~
+\#*\#
+.\#*
+
+# output file
 a.out
+watopoly
