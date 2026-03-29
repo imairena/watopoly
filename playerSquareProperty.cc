@@ -47,6 +47,7 @@ public:
   virtual int getCost() const;
   bool isMortgaged() const;
   virtual int getNumImprovements() const;
+  void setMortgaged(const bool isMortgaged);
 };
 
 

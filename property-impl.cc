@@ -14,6 +14,10 @@ int Property::getCost() const { return cost; }
 bool Property::isMortgaged() const { return mortgaged; }
 int Property::getNumImprovements() const { return 0; }
 
+void Property::setMortgaged(const bool isMortgaged) {
+  mortgaged = isMortgaged;
+}
+
 void Property::setOwner(Player* p) { 
   if (owner != nullptr) { // remove property from old owner
     owner->removeProperty(this);

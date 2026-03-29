@@ -279,7 +279,7 @@ void Board::loadBoard(istream& gameIn) {
 
     // set improvements/mortgaged status
     if (improvements == -1) {
-      prop->mortgage();
+      prop->setMortgaged(true);
     } else if (improvements > 0) {
       auto acBuild = dynamic_cast<AcademicBuilding*>(prop);
       acBuild->setNumImprovements(improvements);
