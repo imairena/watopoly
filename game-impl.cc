@@ -124,7 +124,8 @@ bool Game::playTurn(bool testMode) {
   bool hasRolled = false;
 
   board.display();
-  cout << "Player " << currPlayer.getName() << ", enter command:" << endl;
+  cout << "Player " << currPlayer.getName() << ", enter command:" << endl
+       << "(Type \"help\" to see available commands.)" << endl;
   while (cin >> command) {
     cout << endl;
     if (command == "roll") {
@@ -145,6 +146,7 @@ bool Game::playTurn(bool testMode) {
       all();
     } 
     else if (command == "save") {
+      cout << "Please enter the name of the file you wish to save to:" << endl;
       string filename;
       cin >> filename;
 
@@ -172,8 +174,14 @@ bool Game::playTurn(bool testMode) {
       board.display();
     }
     else if (command == "exit") {
-      cout << "Thank you for playing Watopoly!";
+      cout << "Now exiting game." << endl
+           << "Thank you for playing Watopoly!" << endl;
       return false;
+    }
+    else if (command == "help") {
+      cout << "The available commands are:" << endl
+           << "roll, next, board, assets, all, trade, mortgage," << endl
+           << "unmortgage, improve, bankrupt, save, exit" << endl;
     }
     else {
       cout << "Invalid command." << endl;
@@ -580,11 +588,13 @@ void Game::handleAuction(Property* prop) {
   for (auto& p : players) { activePlayers.emplace_back(&p); }
 
   // auction
+  cout << "The property " << prop->getName() << " is up for auction!" << endl
+       << "Everyone, place your bids." << endl << endl;
   while (activePlayers.size() > 1) {
     // Ask bidder for bid
     Player* currBidder = activePlayers[currBidderIdx];
-    cout << currBidder->getName() << " is up. Enter a bid greater than $" <<
-      highestBid << ", or type 'leave'" << endl;
+    cout << endl << currBidder->getName() << " is up. Enter a bid greater than $"
+         << highestBid << ", or type 'leave'" << endl;
     string input;
     cin >> input;
 
@@ -624,13 +634,19 @@ void Game::handleAuction(Property* prop) {
 
   // Declare winner
   if (highestBidder == nullptr) { highestBidder = activePlayers[0]; }
-  cout << "Going once, going twice, sold! " << highestBidder->getName()
+  cout << "\nGoing once, going twice, sold! " << highestBidder->getName()
     << " bought " << prop->getName() << " for $" << highestBid << "!!" << endl;
   highestBidder->pay(highestBid);
   prop->setOwner(highestBidder);
 } // handleAuction
 
-void Game::handleTrade(Player& currPlayer) {}
+void Game::handleTrade(Player& currPlayer) {
+  
+  // ============================================================================ to do
+  
+  cout << "Trading is unfortunately not available at the moment." << endl;
+}
+
 void Game::handleImprove(Player& currPlayer) {
   string propName, action;
   cin >> propName;

@@ -12,12 +12,18 @@ void CoopFee::landOn(Player* p) {
 
 Tuition::Tuition(string name, int position) : Square(name, position) {}
 void Tuition::landOn(Player* p) {
+
+  string input;
+  if (p->getMoney() < 300) {
+    cout << "You do not have $300, so you must pay 10% of your total worth" << endl;
+    input = "2";
+  }
+  
   cout << "Choose payment method: (1) $300 (2) 10 percent of total worth" << endl;
   
-  string input;
   bool validChoice = false;
 
-  while (validChoice == false && cin >> input) {
+  while (input == "2" || (validChoice == false && cin >> input)) {
     if (input == "assets" || input == "all") {
       cout << "You cannot view assets at this moment." << endl;
     }
@@ -25,6 +31,7 @@ void Tuition::landOn(Player* p) {
       validChoice = true;
       p->pay(300);
       cout << p->getName() << " paid $300." << endl;
+      return;
     } 
     else if (input == "2") {
       validChoice = true;
@@ -35,10 +42,11 @@ void Tuition::landOn(Player* p) {
         totalWorth += prop->getCost();
       }
 
-      int owingAmount = totalWorth / 10;
+      int owingAmount = static_cast<int>(totalWorth / 10);
       p->pay(owingAmount);
       cout << p->getName() << " paid $" << owingAmount;
       cout << ". 10 percent of $" << totalWorth << "." << endl;
+      return;
     }
     else {
       cout << "Invalid choice. Please enter 1 or 2" << endl; 

@@ -159,10 +159,10 @@ void Player::assets() const {
   cout << "Money: $" << money << endl;
   cout << "Position: " << position << endl;
   cout << "Tims Cups: " << timsCups << endl;
-  cout << "Properties: " << name << endl;
+  cout << "Properties: " << endl;
   for (auto p : properties) {
     cout << " - " << p->getName();
     if (p->isMortgaged()) { cout << " (Mortgaged)"; }
-    cout << endl;
+    cout << endl << endl;
   }
 }

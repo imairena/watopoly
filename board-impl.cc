@@ -165,7 +165,7 @@ void Board::display(ostream& out) {
       numImprovements = acBuild->getNumImprovements();
       improvementsString = string("I") * numImprovements;
       location = squareLocation(acBuild->getPosition());
-      boardStringCopy.replace(location + lineWidth, numImprovements, improvementsString);
+      boardStringCopy.replace(location, numImprovements, improvementsString);
     }
   }
   int playerPosition;
