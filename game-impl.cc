@@ -154,7 +154,7 @@ bool Game::playTurn(bool testMode) {
         cout << "You must roll before moving to the next player!" << endl;
       }	else {
         currPlayer.setNumRolls(0);
-	nextPlayer(cout);
+	      nextPlayer(cout);
         return true;
       }
     } // if next
@@ -181,13 +181,31 @@ bool Game::playTurn(bool testMode) {
       handleTrade(currPlayer);
     } 
     else if (command == "mortgage") {
-      handleMortgage(currPlayer);
+      if (currPlayer.getDebt() > 0) {
+        cout << "Use 'bankrupt' command to try to raise money." << endl;
+      }
+      else {
+        handleMortgage(currPlayer);
+      }
     } 
     else if (command == "unmortgage") {
-      handleUnmortgage(currPlayer);
+      if (currPlayer.getDebt() > 0) {
+        cout << "Pay your debt before unmortgaging properties." << endl;
+      }
+      else {
+        handleUnmortgage(currPlayer);
+      }
     } 
     else if (command == "improve") {
-      handleImprove(currPlayer);
+      if (currPlayer.getDebt() > 0) {
+        string restOfInput;
+        getline(cin, restOfInput); // Adds anything left in cin to the variable to avoid 'Invalid Input' msg.
+        cout << "Pay your debt before buying/selling improvments. Use 'bankrupt' command to try to raise money";
+        cout << endl;
+      }
+      else {
+        handleImprove(currPlayer);
+      }
     }  
     else if (command == "board") {
       board.display();
@@ -262,7 +280,7 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
       cout << "You rolled doubles! You get to roll again this turn." << endl << endl;
     }
     else {
-      cout << "Oh No! You just rolled your third triple." << endl;
+      cout << "Oh No! You just rolled your third double." << endl;
       hasRolled = true;
     }
   } else {
@@ -461,28 +479,7 @@ bool Game::handleBankrupt(Player& currPlayer, int amountOwed = 0, Player* credit
       // Mortgage a Property
       if (action == 1) {
         cout << "Enter Property Name:" << endl;
-        string propName;
-        cin >> propName;
-
-        Property* prop = board.getProperty(propName);
-
-        if (prop == nullptr) {
-          cout << "Invalid property." << endl;
-          continue;
-        }
-
-        if (prop->getOwner() != &currPlayer) {
-          cout << "You don't own this property." << endl;
-          continue;
-        }
-
-        if (prop->isMortgaged()) {
-          cout << "Property is already mortgaged." << endl;
-          continue;
-        }
-
-        prop->mortgage();
-        cout << "Property mortgaged successfully." << endl;
+        handleMortgage(currPlayer); 
       }
 
       // Sell improvement
@@ -597,9 +594,7 @@ bool Game::handleBankrupt(Player& currPlayer, int amountOwed = 0, Player* credit
         int unmortgageChoice;
         cin >> unmortgageChoice;
         if (unmortgageChoice == 1) {
-          creditor->pay(prop->getCost() / 2);
-          prop->unmortgage();
-          cout << prop->getName() << " has been unmortgaged." << endl;
+          handleUnmortgage(*creditor);
         } else {
           cout << "Property left mortgaged. Note: an additional 10% fee applies if unmortgaged later." << endl;
         }

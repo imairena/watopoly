@@ -51,7 +51,7 @@ void Property::mortgage() {
   mortgaged = true;
   int amount = cost / 2; 
   owner->receive(amount);
-  cout << getName() << " was successfully mortgaged." << endl;
+  cout << getName() << " was successfully mortgaged for $" << amount << "." << endl;
 
 } // mortgage
 
@@ -70,7 +70,7 @@ void Property::unmortgage() {
   mortgaged = false;
   int amount = (cost / 2) * 1.10; 
   owner->pay(amount);
-  cout << getName() << " was successfully unmortgaged." << endl;
+  cout << getName() << " was successfully unmortgaged for $" << amount << "." << endl;
 
 } // unmortgage
 
