@@ -61,6 +61,7 @@ GoToTims::GoToTims(string name, int position) : Square(name, position) {}
 void GoToTims::landOn(Player* p) {
   p->setPosition(10); // Tims in the 10th square on the board
   p->setInTims(true);
+  p->incrementTimsTurns();
   cout << p->getName() << " was sent to Tims!!!" << endl;
 } // GoToTims::landOn
 

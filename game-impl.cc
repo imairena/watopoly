@@ -191,6 +191,11 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
     cout << "You already rolled this turn." << endl;
     return;
   }
+
+  if (currPlayer.getInTims()) {
+    handleTimsTurn(currPlayer);
+  }
+
   int die1, die2;
   if (testMode) {
     cout << "What two (non-negative) numbers would you like to roll?" << endl;
@@ -211,6 +216,18 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
   }
   
   int rollSum = die1 + die2;
+
+  if (currPlayer.getInTims()) {
+    if (die1 == die2) {
+      cout << "You rolled doubles and left Tims!." << endl;
+    } else {
+      cout << "You did not roll doubles." << endl;
+      if (currPlayer.getTimsTurns() < 3) {
+        return;
+      }
+      handleTimsTurn(currPlayer);
+    }
+  }
       
   // update player
   currPlayer.setLastRoll(rollSum);
@@ -265,12 +282,96 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
 
   // check if player rolled doubles
   if (die1 == die2) {
-    cout << "You rolled doubles! You get to roll again." << endl;
+    if (!currPlayer.getInTims()) {
+      cout << "You rolled doubles! You get to roll again." << endl;
+    } else {
+      currPlayer.leaveTims();
+      hasRolled = true;
+    }
   } 
   else {
     hasRolled = true;
   }
 } // handleRoll
+
+void Game::handleTimsTurn(Player& currPlayer) {
+  cout << currPlayer.getName() << " is in the DC Tims Line." << endl;
+  cout << "Turns in Tims: " << currPlayer.getTimsTurns() << "/3" << endl;
+  cout << "Current Tims cup(s): " << currPlayer.getCups() << endl;
+  
+  if (currPlayer.getTimsTurns() > 3) {
+    cout << "This is your third turn in Tims. You must leave." << endl;
+    while (true) {
+      cout << "Choose an option:" << endl;
+      cout << "1. Pay $50" << endl;
+      if (currPlayer.getCups() > 0) {
+        cout << "2. Use a Roll Up the Rim cup" << endl;
+      }
+      
+      int choice;
+      cin >> choice;
+      
+      // Pay $50 and leave Tims
+      if (choice == 1) {
+        currPlayer.pay(50);
+        currPlayer.leaveTims();
+        cout << "Paid $50 and left Tims." << endl;
+        return;
+      }
+      
+      // Use Tims Cup and leave Tims
+      if (choice == 3) {
+        if (currPlayer.getCups() <= 0) {
+          cout << "You do not have any cups to use" << endl;
+          continue;
+        }
+        currPlayer.useCup();
+        totalCups--;
+        cout << "Used a Roll Up the Rim cup and left Tims." << endl;
+        return;
+      }
+    }
+  }
+      
+  while (true) {
+  
+    cout << "Choose an option:" << endl;
+    cout << "1. Roll for doubles" << endl;
+    cout << "2. Pay $50" << endl;
+    if (currPlayer.getCups() > 0) {
+      cout << "3. Use a Roll Up the Rim cup" << endl;
+    }
+
+    int choice;
+    cin >> choice;
+
+    // Pay $50 and leave Tims
+    if (choice == 2) {
+      currPlayer.pay(50);
+      currPlayer.leaveTims();
+      cout << "Paid $50 and left Tims." << endl;
+      return;
+    }
+
+    // Use Tims Cup and leave Tims
+    if (choice == 3) {
+      if (currPlayer.getCups() <= 0) {
+        cout << "You do not have any cups to use" << endl;
+        continue;
+      }
+      currPlayer.useCup();
+      totalCups--;
+      cout << "Used a Roll Up the Rim cup and left Tims." << endl;
+      return;
+    }
+    
+    // Try to roll for doubles
+    if (choice == 1) {
+      currPlayer.incrementTimsTurns();
+      return;
+    }
+  }
+} // handleTimsTurn
 
 bool Game::handleBankrupt(Player& currPlayer, int amountOwed = 0, Player* creditor = nullptr) {
 
