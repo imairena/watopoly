@@ -19,6 +19,7 @@ export class Game {
   // helper methods (private)
   void handleTimsTurn(Player& currPlayer);
   void handleRoll(Player& currPlayer, bool& hasRolled, bool testMode = false);
+  void handleLandOn(Player& currPlayer, int newPos);
   bool handleBankrupt(Player& currPlayer, int amountOwed, Player* creditor);
   void handleAuction(Property* prop);
   void handleTrade(Player& currPlayer);

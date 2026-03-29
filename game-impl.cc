@@ -244,27 +244,43 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
 
   // check if player rolled doubles
   if (die1 == die2) {
-    if (!currPlayer.getInTims()) {
-      cout << "You rolled doubles! You get to roll again this turn." << endl << endl;
-    } else {
-      currPlayer.leaveTims();
-      hasRolled = true;
-    }
-  } 
-  else {
+    cout << "You rolled doubles! You get to roll again this turn." << endl << endl;
+  } else {
     hasRolled = true;
   }
-  
+     
+  // check if passed collectOSAP (check >40 since =40 is handled by 
+  // landOn method in CollectOSAP class)
+  if (oldPos + rollSum > 40 && newPos > 0) {
+    cout << currPlayer.getName() << " collected $200 from OSAP!" << endl << endl;
+    currPlayer.receive(200);
+  }
+
+  handleLandOn(currPlayer, newPos);
+
+  // If landOn() moved the player, then treat as if player landed on new square
+  if (newPos != currPlayer.getPosition()) {
+    newPos = currPlayer.getPosition();
+    handleLandOn(currPlayer, newPos);
+  }
+
+  // Limit of two moves in a row
+  if (newPos != currPlayer.getPosition()) {
+    cout << "Max number of moves per turn reached." << endl << endl;
+  }
+}// handleRoll
+
+void Game::handleLandOn(Player& currPlayer, int newPos) {
   // apply square action
   Square* landedSquare = &board.getSquare(newPos); // getSquare returns by reference
   cout << currPlayer.getName() << " landed on " << landedSquare->getName() << "." << endl;
   
   // ---- ROLL UP THE RIM LOGIC ----
-  bool isCupSquare =
+  bool isCardSquare =
     (landedSquare->getName() == "SLC" ||
      landedSquare->getName() == "NEEDLES HALL");
 
-  if (isCupSquare && totalCups < maxCups) {
+  if (isCardSquare && totalCups < maxCups) {
     int chance = generateRandom(1, 100);
 
     if (chance == 67) {  // 1% chance
@@ -273,7 +289,7 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
       currPlayer.addCup();
       totalCups++;
 
-      cout << "You now have: " << currPlayer.getCups() << " cup(s)." << endl;
+      cout << "You now have: " << currPlayer.getCups() << " cup(s)." << endl << endl;
       // Skip normal square effect
       return;
     }
@@ -281,13 +297,6 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
 
   // ---- NORMAL SQUARE EFFECT ----
   landedSquare->landOn(&currPlayer);
-     
-  // check if passed collectOSAP (check >40 since =40 is handled by 
-  // landOn method in CollectOSAP class)
-  if (oldPos + rollSum > 40 && newPos > 0) {
-    cout << currPlayer.getName() << " collected $200 from OSAP!" << endl;
-    currPlayer.receive(200);
-  }
 
   // if the square was a property and was not bought, need to auction,
   // otherwise just move on with the turn
@@ -295,7 +304,7 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
   if (landedProp != nullptr && landedProp->getOwner() == nullptr) {
     handleAuction(landedProp);
   }
-} // handleRoll
+} // handleLandOn
 
 void Game::handleTimsTurn(Player& currPlayer) {
   cout << currPlayer.getName() << " is in the DC Tims Line." << endl;
