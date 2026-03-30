@@ -1,0 +1,9 @@
+2
+Euler L 4 2718 18
+Turing T 0 1024 3
+A1 Euler 0
+A2 Euler 0
+C1 Turing 3
+C2 Turing 3
+C3 Turing 3
+C4 Turing 3
