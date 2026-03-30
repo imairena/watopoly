@@ -1,0 +1,8 @@
+SLC 1 MoveTo 39 Example_card_(move_to_39)
+SLC 1 Move 10 Example_card_(move_10)
+SLC 1 GoToTims 0 Example_card_(go_to_Tims)
+SLC 1 Money 3141 Example_card_(gain_$3141)
+NeedlesHall 1 MoveTo 30 Example_card_(move_to_30)
+NeedlesHall 1 Move -10 Example_card_(move_-10)
+NeedlesHall 1 GoToTims 0 Example_card_(go_to_Tims)
+NeedlesHall 1 Money -1 Example_card_(lose_$1)
