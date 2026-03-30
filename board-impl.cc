@@ -156,11 +156,13 @@ Board::Board(istream& boardIn, istream& squaresIn,
 
 // prints a text display of the current board state
 void Board::display(ostream& out) {
-  // modify copy of boardString with players/improvements
+  // copy boardString
   string boardStringCopy = boardString;
+
+  // add improvements to display
   string improvementsString;
   int numImprovements, location;
-  for (auto& squareptr : squares) {  // display improvements
+  for (auto& squareptr : squares) {
     if (auto acBuild = dynamic_cast<AcademicBuilding*>(squareptr.get())) {
       numImprovements = acBuild->getNumImprovements();
       improvementsString = string("I") * numImprovements;
@@ -168,17 +170,42 @@ void Board::display(ostream& out) {
       boardStringCopy.replace(location, numImprovements, improvementsString);
     }
   }
+  // add players to display
   int playerPosition;
   char playerToken;
-  int playerOffset = 0;  // ensures players can't be printed on top of each other
-  for (auto& playerptr : *players) {  // display player positions
+  int playerOffset = 0; // ensures players can't be printed on top of each other
+  for (auto& playerptr : *players) {
     playerPosition = squareLocation(playerptr.getPosition());
     playerPosition += 3 * lineWidth + playerOffset;
     playerToken = playerptr.getToken();
-    // update boardString
+    // update display with player position
     boardStringCopy.replace(playerPosition, 1, 1, playerToken);
     ++playerOffset;
   }
+  // add number of SLC/Needles Hall cards to board
+  int yPos = 41, xPosNeedlesHall = 33, xPosSLC = 55;
+  bool foundSLC = false;
+  bool foundNeedlesHall = false;
+  for (auto& squareptr : squares) {
+    if (!foundNeedlesHall) {
+      if (auto nh = dynamic_cast<NeedlesHall*>(squareptr.get())) {
+        string numCardsString = to_string(nh->getNumRemainingCards());
+        int location = yPos * lineWidth + xPosNeedlesHall;
+        boardStringCopy.replace(location, numCardsString.length(), numCardsString);
+        foundNeedlesHall = true;
+      }
+    }
+    if (!foundSLC) {
+      if (auto slc = dynamic_cast<SLC*>(squareptr.get())) {
+        string numCardsString = to_string(slc->getNumRemainingCards());
+        int location = yPos * lineWidth + xPosSLC;
+        boardStringCopy.replace(location, numCardsString.length(), numCardsString);
+        foundSLC = true;
+      }
+    }
+    if (foundSLC && foundNeedlesHall) break;
+  }
+  
   out << boardStringCopy;  // no endl because boardString already ends with "\n"
 }
 
