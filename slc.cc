@@ -11,7 +11,9 @@ import card;
 
 export class SLC: public CardSquare {
   static std::vector<std::unique_ptr<Card>> cards;
+  static int currentCard;
   std::vector<std::unique_ptr<Card>>& getCards() override;
+  int& getCurrentCard() override;
 public:
   SLC(int position);
   void addCard(std::unique_ptr<Card> card);

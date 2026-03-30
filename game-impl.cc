@@ -140,13 +140,21 @@ bool Game::playTurn(bool testMode) {
   while (cin >> command) {
     cout << endl;
     if (command == "roll") {
-      handleRoll(currPlayer, hasRolled, testMode);
+      if (currPlayer.getDebt() > 0) {
+        cout << "You must pay your debt before rolling!" << endl;
+      } else {
+        handleRoll(currPlayer, hasRolled, testMode);
+      }
     } // if roll
     else if (command == "next") {
-      if (!hasRolled) {
+      if (currPlayer.getDebt() > 0) {
+        cout << "You must pay your debt before moving to the next player!" << endl;
+      }
+      else if (!hasRolled) {
         cout << "You must roll before moving to the next player!" << endl;
-      } else {
-        nextPlayer(cout);
+      }	else {
+        currPlayer.setNumRolls(0);
+	      nextPlayer(cout);
         return true;
       }
     } // if next
@@ -173,13 +181,31 @@ bool Game::playTurn(bool testMode) {
       handleTrade(currPlayer);
     } 
     else if (command == "mortgage") {
-      handleMortgage(currPlayer);
+      if (currPlayer.getDebt() > 0) {
+        cout << "Use 'bankrupt' command to try to raise money." << endl;
+      }
+      else {
+        handleMortgage(currPlayer);
+      }
     } 
     else if (command == "unmortgage") {
-      handleUnmortgage(currPlayer);
+      if (currPlayer.getDebt() > 0) {
+        cout << "Pay your debt before unmortgaging properties." << endl;
+      }
+      else {
+        handleUnmortgage(currPlayer);
+      }
     } 
     else if (command == "improve") {
-      handleImprove(currPlayer);
+      if (currPlayer.getDebt() > 0) {
+        string restOfInput;
+        getline(cin, restOfInput); // Adds anything left in cin to the variable to avoid 'Invalid Input' msg.
+        cout << "Pay your debt before buying/selling improvments. Use 'bankrupt' command to try to raise money";
+        cout << endl;
+      }
+      else {
+        handleImprove(currPlayer);
+      }
     }  
     else if (command == "board") {
       board.display();
@@ -231,11 +257,17 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
   }
   
   int rollSum = die1 + die2;
-      
+  currPlayer.incrementNumRolls();
+  
   // update player
   currPlayer.setLastRoll(rollSum);
   int oldPos = currPlayer.getPosition();
-  int newPos = (oldPos + rollSum) % 40;
+  
+  // Can't roll more than 2 doubles
+  bool triple_double = (die1 == die2 && currPlayer.getNumRolls() >= 3) ? true : false;
+  int new_position = triple_double ? 30 : oldPos + rollSum; // Go to Tims (pos 30) if you rolled 3 doubles
+
+  int newPos = (new_position) % 40;
   currPlayer.setPosition(newPos);
   
   board.display();
@@ -244,14 +276,20 @@ void Game::handleRoll(Player& currPlayer, bool& hasRolled, bool testMode) {
 
   // check if player rolled doubles
   if (die1 == die2) {
-    cout << "You rolled doubles! You get to roll again this turn." << endl << endl;
+    if (currPlayer.getNumRolls() < 3) {
+      cout << "You rolled doubles! You get to roll again this turn." << endl << endl;
+    }
+    else {
+      cout << "Oh No! You just rolled your third double." << endl;
+      hasRolled = true;
+    }
   } else {
     hasRolled = true;
   }
      
   // check if passed collectOSAP (check >40 since =40 is handled by 
   // landOn method in CollectOSAP class)
-  if (oldPos + rollSum > 40 && newPos > 0) {
+  if (new_position > 40 && newPos > 0) {
     cout << currPlayer.getName() << " collected $200 from OSAP!" << endl << endl;
     currPlayer.receive(200);
   }
@@ -441,28 +479,7 @@ bool Game::handleBankrupt(Player& currPlayer, int amountOwed = 0, Player* credit
       // Mortgage a Property
       if (action == 1) {
         cout << "Enter Property Name:" << endl;
-        string propName;
-        cin >> propName;
-
-        Property* prop = board.getProperty(propName);
-
-        if (prop == nullptr) {
-          cout << "Invalid property." << endl;
-          continue;
-        }
-
-        if (prop->getOwner() != &currPlayer) {
-          cout << "You don't own this property." << endl;
-          continue;
-        }
-
-        if (prop->isMortgaged()) {
-          cout << "Property is already mortgaged." << endl;
-          continue;
-        }
-
-        prop->mortgage();
-        cout << "Property mortgaged successfully." << endl;
+        handleMortgage(currPlayer); 
       }
 
       // Sell improvement
@@ -531,6 +548,9 @@ bool Game::handleBankrupt(Player& currPlayer, int amountOwed = 0, Player* credit
 
   // Successfully raised enough money
   if (!declaringBankruptcy && currPlayer.getMoney() >= amountOwed) {
+    currPlayer.pay(amountOwed);
+    currPlayer.setDebt(0);
+    if (creditor) creditor->receive(amountOwed);
     cout << "You have successfully recovered from debt!" << endl;
     return false;
   }
@@ -574,9 +594,7 @@ bool Game::handleBankrupt(Player& currPlayer, int amountOwed = 0, Player* credit
         int unmortgageChoice;
         cin >> unmortgageChoice;
         if (unmortgageChoice == 1) {
-          creditor->pay(prop->getCost() / 2);
-          prop->unmortgage();
-          cout << prop->getName() << " has been unmortgaged." << endl;
+          handleUnmortgage(*creditor);
         } else {
           cout << "Property left mortgaged. Note: an additional 10% fee applies if unmortgaged later." << endl;
         }
@@ -666,11 +684,137 @@ void Game::handleAuction(Property* prop) {
 } // handleAuction
 
 void Game::handleTrade(Player& currPlayer) {
+  string otherPlayerName;
+  Player *otherPlayer;
+
+  // get other player
+  while (true) {
+    cout << "Which player would you like to trade with?" << endl;
+    cin >> otherPlayerName;
+    cout << endl;
+    otherPlayer = board.getPlayer(otherPlayerName);
+    if (!otherPlayer) {
+      cout << "There is no player named " << otherPlayerName << "." << endl
+           << "Please try again." << endl;
+    } else if (&currPlayer == otherPlayer) {
+      cout << "You cannot trade with yourself. Try again." << endl;
+    }
+    else break;
+  }
+
+  // determine the type of trade
+  string receive, give;
+  int intReceive, intGive;
+  Property *propReceive = nullptr;
+  Property *propGive = nullptr;
+
+  // determine what to give
+  while (true) {
+    cout << "Please enter the amount of money/property you would like to GIVE:" << endl;
+    cin >> give;
+    cout << endl;
+    stringstream ss{give};
+
+    // give is an amount of money
+    if (ss >> intGive) {
+      if (intGive < 0) {
+        cout << "You cannot trade a negative amount of money. try again." << endl;
+        continue;
+      }
+      if (intGive > currPlayer.getMoney()) {
+        cout << "You do not have enough money to make this trade. Try again." << endl;
+        continue;
+      }
+      break;
+    }
+    // give is a property
+    propGive = board.getProperty(give);
+    if (!propGive) {
+      cout << "Invalid property/amount of money. Try again." << endl;
+      continue;
+    }
+    if (!(propGive->tradeable(&currPlayer))) continue;
+    break;
+  }
+
+  // determine what to receive
+  while (true) {
+    cout << "Please enter the amount of money/property you would like to RECEIVE:" << endl;
+    cin >> receive;
+    cout << endl;
+    stringstream ss{receive};
+
+    // receive is an amount of money
+    if (ss >> intReceive) {
+      if (intReceive < 0) {
+        cout << "You cannot trade a negative amount of money. try again." << endl;
+        continue;
+      }
+      if (intReceive > otherPlayer->getMoney()) {
+        cout << otherPlayer->getName()
+             << " does not have enough money to make this trade. Try again." << endl;
+        continue;
+      }
+      break;
+    }
+    // give is a property
+    propReceive = board.getProperty(receive);
+    if (!propReceive) {
+      cout << "Invalid property/amount of money. Try again." << endl;
+      continue;
+    }
+    if (!(propReceive->tradeable(otherPlayer))) continue;
+    break;
+  }
+
+  // can't trade money for money
+  if (!propGive && !propReceive) {
+    cout << "You may not trade money for money. Aborting trade." << endl << endl;
+    return;
+  }
+
+  // display trade details
+  cout << "Trade summary:" << endl << "Player " << currPlayer.getName()
+       << " would GIVE " << give << " to player " << otherPlayer->getName() << endl
+       << "and RECEIVE " << receive << " in return." << endl << endl;
   
-  // ============================================================================ to do
+  // get response
+  string response;
+  while (true) {
+    cout << "Player " << otherPlayer->getName()
+         << ", please enter your response to the proposed trade:" << endl
+         << "(\"accept\" or \"reject\")" << endl;
+    cin >> response;
+    cout << endl;
+    if (response == "accept") break;
+    else if (response == "reject") {
+      cout << "Trade has been rejected. Player " << currPlayer.getName()
+           << " may continue their turn as usual." << endl << endl;
+      return;
+    } else {
+      cout << "Invalid response. Try again." << endl;
+      continue;
+    }
+  }
   
-  cout << "Trading is unfortunately not available at the moment." << endl;
-}
+  // complete give part of trade
+  if (propGive) {
+    propGive->setOwner(otherPlayer);
+  } else {
+    currPlayer.pay(intGive);
+    otherPlayer->receive(intGive);
+  }
+
+  // complete receive part of trade
+  if (propReceive) {
+    propReceive->setOwner(&currPlayer);
+  } else {
+    currPlayer.receive(intReceive);
+    otherPlayer->pay(intReceive);
+  }
+
+  cout << "Trade completed successfully!" << endl << endl;
+} // handleTrade
 
 void Game::handleImprove(Player& currPlayer) {
   string propName, action;
@@ -690,7 +834,7 @@ void Game::handleImprove(Player& currPlayer) {
       cout << "You can only improve academic buildings." << endl;
     }
     // check if monopoly is owned
-    else if (!ab->hasMonopoly()) {
+    else if (!(ab->hasMonopoly())) {
       cout << "Need monopoly to buy/sell improvements for " << propName << "." << endl;
     }
     else if (action == "buy") {

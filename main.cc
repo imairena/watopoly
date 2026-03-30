@@ -28,6 +28,15 @@ int main(int argc, char *argv[]) {
     } else if (arg == "-test") {
       flagTest = true;
       ++i;
+    } else if (arg == "-board") {
+      boardFile = argv[i + 1];
+      i += 2;
+    } else if (arg == "-squares") {
+      squaresFile = argv[i + 1];
+      i += 2;
+    } else if (arg == "-cards") {
+      cardsFile = argv[i + 1];
+      i += 2;
     } else {
       cout << "Error: Unknown flag " << arg << endl;
       return 0;
@@ -35,7 +44,7 @@ int main(int argc, char *argv[]) {
   }
 
   ifstream boardIn{boardFile};
-  ifstream squaresIn{squaresFile};
+  ifstream squaresIn{squaresFile}; // requires 40 spaces with Tims = space 10
   ifstream cardsIn{cardsFile};
 
   Game game{boardIn, squaresIn, cardsIn};

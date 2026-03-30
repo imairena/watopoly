@@ -6,8 +6,17 @@ using namespace std;
 
 CoopFee::CoopFee(string name, int position) : Square(name, position) {}
 void CoopFee::landOn(Player* p) {
-  p->pay(150);
-  cout << p->getName() << " Paid $150." << endl;
+  int amountOwed = 150;
+  if (p->getMoney() >= amountOwed) { // check if enough money to pay
+    p->pay(150);
+    cout << p->getName() << " Paid $150." << endl;
+  }
+  else { // not enough to pay
+    cout << "The Coop Fee costs $150, but you only have $" << p->getMoney()
+	 << ". Use 'bankrupt' command to try to pay" << endl;
+    p->setDebt(amountOwed);
+    p->setCreditor(nullptr);
+  }
 } // CoopFee::landOn
 
 Tuition::Tuition(string name, int position) : Square(name, position) {}

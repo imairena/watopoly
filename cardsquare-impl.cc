@@ -19,6 +19,7 @@ CardSquare::CardSquare(string name, int position):
 
 void CardSquare::landOn(Player* p) {
   vector<unique_ptr<Card>>& cards = getCards();
+  int& currentCard = getCurrentCard();
   cards[currentCard]->apply(p);
   currentCard = (currentCard + 1) % cards.size();
   if (currentCard == 0) {
@@ -31,4 +32,10 @@ void CardSquare::landOn(Player* p) {
 void CardSquare::shuffleCards() {
   vector<unique_ptr<Card>>& cards = getCards();
   shuffleVector(cards);
+}
+
+int CardSquare::getNumRemainingCards() {
+  vector<unique_ptr<Card>>& cards = getCards();
+  int& currentCard = getCurrentCard();
+  return cards.size() - currentCard;
 }

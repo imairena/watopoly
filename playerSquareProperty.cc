@@ -41,10 +41,13 @@ public:
   void unmortgage();
   void setOwner(Player* p);
   void landOn(Player* p) override;
+  virtual bool tradeable(Player *p) const;
 
   Player* getOwner() const;
   virtual int getCost() const;
   bool isMortgaged() const;
+  virtual int getNumImprovements() const;
+  void setMortgaged(const bool isMortgaged);
 };
 
 
@@ -58,6 +61,7 @@ export class Player {
   int timsCups;
   bool inTims;
   int timsTurns;
+  int numRolls;
   std::vector<Property*> properties;
   bool isBankrupt;
   int lastRoll;
@@ -87,6 +91,11 @@ public:
   void addProperty(Property* p);
   void removeProperty(Property* p);
   const std::vector<Property*>& getProperties() const;
+
+  // Turns
+  void incrementNumRolls();
+  int getNumRolls() const;
+  void setNumRolls(int num);
 
   // Tims Line
   void sendToTims();

@@ -18,11 +18,12 @@ public:
   int getFee(Player* p) override;
   void addImprovement();
   void removeImprovement();
-  bool hasMonopoly();
+  bool hasMonopoly() const;
+  bool tradeable(Player* p) const override;
 
   // Accessors
   int getCost() const override;
-  int getNumImprovements() const;
+  int getNumImprovements() const override;
   int getImprovementCost() const;
   int getBlockSize() const;
   std::string getMonopolyBlock() const;
