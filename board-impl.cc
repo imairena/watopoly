@@ -277,7 +277,8 @@ void Board::createCards(SLC *slcptr, NeedlesHall *needleshallptr,
 void Board::saveBoard(ostream& gameOut) const {
   for (auto& squareptr : squares) {
     if (auto prop = dynamic_cast<Property*>(squareptr.get())) {
-      gameOut << prop->getName() << " " << prop->getOwner() << " ";
+      Player* propOwner = prop->getOwner();
+      gameOut << prop->getName() << " " << (propOwner == nullptr ? "BANK" : propOwner->getName()) << " ";
       if (prop->isMortgaged()) {
         gameOut << -1;
       }
