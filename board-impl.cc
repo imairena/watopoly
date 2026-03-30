@@ -302,6 +302,8 @@ void Board::loadBoard(istream& gameIn) {
     Property *prop = getProperty(propName);
     Player *player = getPlayer(playerName);
 
+    if (!player) continue;
+    
     prop->setOwner(player);
 
     // set improvements/mortgaged status
