@@ -50,4 +50,10 @@ git push origin main
 ```
 
 ## Authors and acknowledgment
-Thank you all for the hard work :)
+This repository contains the final group project for CS 246: Object-Oriented Software Development at the University of Waterloo.
+
+Project contributors:
+
+Ian Mairena  
+Luke Bennet  
+Justin Barrette
